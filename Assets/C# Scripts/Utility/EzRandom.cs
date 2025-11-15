@@ -70,6 +70,10 @@ public static class EzRandom
     {
         return random.NextFloat(value.min, value.max);
     }
+    public static int Range(MinMaxInt value)
+    {
+        return random.NextInt(value.min, value.max);
+    }
 
     public static Vector3 Range(Vector3 min, Vector3 max)
     {

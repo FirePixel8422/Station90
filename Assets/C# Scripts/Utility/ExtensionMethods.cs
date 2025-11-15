@@ -144,7 +144,7 @@ public static class ExtensionMethods
         return UnityEngine.Object.FindFirstObjectByType<T>();
     }
 
-    public static T[] FindObjectsOfType<T>(this UnityEngine.Object obj, bool includeInactive, bool sortByInstanceID = false) where T : UnityEngine.Object
+    public static T[] FindObjectsOfType<T>(this UnityEngine.Object obj, bool includeInactive = true, bool sortByInstanceID = false) where T : UnityEngine.Object
     {
         FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
         FindObjectsSortMode sortMode = sortByInstanceID ? FindObjectsSortMode.InstanceID : FindObjectsSortMode.None;
