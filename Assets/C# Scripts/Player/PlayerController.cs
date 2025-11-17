@@ -1,4 +1,3 @@
-using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -18,20 +17,21 @@ public class PlayerController : MonoBehaviour
     private float yRotation = 0f;
 
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
+        xRotation = camTransform.localEulerAngles.x;
+        yRotation = transform.localEulerAngles.y;
         Cursor.lockState = CursorLockMode.Locked;
     }
+
+    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
+    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
     private void OnUpdate()
     {
         Move();
-
         LookAround();
     }
 
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
         yRotation += mouseX;
 
-        transform.localRotation = Quaternion.Euler(0, yRotation, 0f);
         camTransform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
+        transform.localRotation = Quaternion.Euler(0, yRotation, 0f);
     }
 }

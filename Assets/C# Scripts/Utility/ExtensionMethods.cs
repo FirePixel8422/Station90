@@ -104,7 +104,7 @@ public static class ExtensionMethods
         component = trans.GetComponentInChildren<T>(includeInactive);
         return component != null;
     }
-    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive) where T : UnityEngine.Object
+    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive = false) where T : UnityEngine.Object
     {
         components = trans.GetComponentsInChildren<T>(includeInactive);
 
