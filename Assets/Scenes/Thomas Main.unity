@@ -174,7 +174,7 @@ MonoBehaviour:
   m_SoftShadowQuality: 0
   m_RenderingLayersMask:
     serializedVersion: 0
-    m_Bits: 1
+    m_Bits: 65
   m_ShadowRenderingLayersMask:
     serializedVersion: 0
     m_Bits: 1
@@ -232,7 +232,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 65
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
@@ -1306,7 +1306,7 @@ MonoBehaviour:
   m_SoftShadowQuality: 0
   m_RenderingLayersMask:
     serializedVersion: 0
-    m_Bits: 1
+    m_Bits: 65
   m_ShadowRenderingLayersMask:
     serializedVersion: 0
     m_Bits: 1
@@ -1364,7 +1364,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 65
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
@@ -1618,7 +1618,7 @@ Transform:
   m_GameObject: {fileID: 1224962273}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 1, y: 0.5, z: -1}
+  m_LocalPosition: {x: 2.03, y: 0.5, z: -0.14}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1691,7 +1691,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    valueMultiplier: 12
+    valueMultiplier: 25
     sampleCount: 50
   intensityOnVoid: 1
   checkRingRayCounts: 01000000050000000a000000
@@ -1931,12 +1931,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 3bacd61c970cae94bb1751efd5ba7700,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3bacd61c970cae94bb1751efd5ba7700,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3bacd61c970cae94bb1751efd5ba7700,
         type: 3}
@@ -1995,8 +1995,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 3bacd61c970cae94bb1751efd5ba7700,
         type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3bacd61c970cae94bb1751efd5ba7700,
+        type: 3}
       propertyPath: m_RenderingLayerMask
-      value: 128
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 3bacd61c970cae94bb1751efd5ba7700,
         type: 3}
@@ -3378,7 +3383,7 @@ MonoBehaviour:
   m_SoftShadowQuality: 0
   m_RenderingLayersMask:
     serializedVersion: 0
-    m_Bits: 1
+    m_Bits: 65
   m_ShadowRenderingLayersMask:
     serializedVersion: 0
     m_Bits: 1
@@ -3436,7 +3441,7 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 65
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
