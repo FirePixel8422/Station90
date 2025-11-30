@@ -53,7 +53,9 @@ public class PlayerFlashLight : MonoBehaviour
     {
         Vector3 flashLightPos = flashLight.transform.position;
 
-        Ray centerRay = cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 center = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+        Ray centerRay = cam.ScreenPointToRay(center);
+
         Vector3 origin = centerRay.origin;
         Vector3 forward = centerRay.direction;
 
