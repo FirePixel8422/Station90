@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 
 public static class ExtensionMethods
@@ -337,5 +338,18 @@ public static class ExtensionMethods
     {
         targetArray[targetId] = targetArray[backId];
         targetArray[backId] = nullValue;
+    }
+
+    /// <summary>
+    /// Increments index by 1 and wraps to 0 if it reaches length
+    /// </summary>
+    /// <param name="length"></param>
+    public static void IncrememtSmart(this ref int value, int length)
+    {
+        value += 1;
+        if (value >= length)
+        {
+            value = 0;
+        }
     }
 }

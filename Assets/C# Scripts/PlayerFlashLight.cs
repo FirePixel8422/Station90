@@ -1,4 +1,6 @@
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class PlayerFlashLight : MonoBehaviour
@@ -20,13 +22,39 @@ public class PlayerFlashLight : MonoBehaviour
     [SerializeField] private MinMaxFloat flickerDelayMinMax;
     [SerializeField] private MinMaxFloat flickerTimeMinMax;
 
+    [Header("Max flashlight tilt angle")]
+    [SerializeField] private float maxFlashlightTiltAngle = 25f;
+
+    [Header("Power Down Settings")]
+    [SerializeField] private float powerDownDuration = 2f;
+
     private Light flashLight;
     private Camera cam;
 
-    private float nextStateUpdateGlobalTime;
+    private bool isEnabled = true;
+    private float fullPowerDownGlobalTime;
+    private float powerDownStartIntensity;
+
     private bool isFlickering;
+    private float nextStateUpdateGlobalTime;
     private float cIntensityMultiplier;
 
+
+
+    public void OnFlashLightToggle(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            isEnabled = !isEnabled;
+
+            // Turned On
+            if (isEnabled)
+            {
+                powerDownStartIntensity = flashLight.intensity;
+                fullPowerDownGlobalTime = Time.time + powerDownDuration;
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -40,34 +68,43 @@ public class PlayerFlashLight : MonoBehaviour
 
     private void OnUpdate()
     {
-        if (TryGetAvgLightDistance(out float distance))
+        if (isEnabled)
         {
-            flashLight.intensity = GetIntensity(distance) * cIntensityMultiplier;
+            if (TryGetAvgLightDistance(out float distance))
+            {
+                flashLight.intensity = GetIntensity(distance) * cIntensityMultiplier;
+            }
+            else
+            {
+                flashLight.intensity = intensityOnVoid * cIntensityMultiplier;
+            }
+
+            // Wait until next state update delay has passed before executing
+            if (Time.time < nextStateUpdateGlobalTime) return;
+
+            // Toggle flickering state
+            isFlickering = !isFlickering;
+            
+            // If Lamp starts flickering now
+            if (isFlickering)
+            {
+                cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
+                flashLight.intensity *= cIntensityMultiplier;
+
+                nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
+            }
+            // If lamp is no longer flickering, let it flicker
+            else
+            {
+                cIntensityMultiplier = 1;
+
+                nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
+            }
         }
         else
         {
-            flashLight.intensity = intensityOnVoid * cIntensityMultiplier;
-        }
-
-        // Wait until next state update delay has passed before executing
-        if (Time.time < nextStateUpdateGlobalTime) return;
-
-        // If lamp was flickering, stabilize it and set 
-        if (isFlickering)
-        {
-            cIntensityMultiplier = 1;
-
-            isFlickering = false;
-            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
-        }
-        // If lamp was flickering, let it flicker
-        else
-        {
-            cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
-            flashLight.intensity *= cIntensityMultiplier;
-
-            isFlickering = true;
-            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
+            float powerPercentage01 = math.clamp(fullPowerDownGlobalTime - Time.time, 0, int.MaxValue) / powerDownDuration;
+            flashLight.intensity = powerDownStartIntensity * powerPercentage01;
         }
     }
 
@@ -157,7 +194,21 @@ public class PlayerFlashLight : MonoBehaviour
         }
 
         avgDistance = totalDistance / hitCount;
-        flashLight.transform.LookAt(origin + forward * avgDistance);
+
+        Quaternion lookRotation = GetLookRotation(flashLight.transform.position, origin + forward * avgDistance);
+        float angleDiff = Quaternion.Angle(flashLight.transform.rotation, lookRotation);
+
+        lookRotation = Quaternion.RotateTowards(lookRotation, flashLight.transform.rotation, Mathf.MoveTowards(angleDiff, 0, maxFlashlightTiltAngle));
+        flashLight.transform.rotation = lookRotation;
+
+        flashLight.transform.localEulerAngles = new Vector3(flashLight.transform.localEulerAngles.x, flashLight.transform.localEulerAngles.y, 0f);
         return true;
+    }
+
+
+    public static Quaternion GetLookRotation(Vector3 from, Vector3 targetPos)
+    {
+        Vector3 dir = targetPos - from;
+        return Quaternion.LookRotation(dir, Vector3.up);
     }
 }

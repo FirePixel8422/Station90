@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveDir;
     private Vector2 mouseDelta;
-    private float camRotX = 0f;
-    private float camRotY = 0f;
+    private float camRotX;
+    private float camRotY;
 
 
 
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnLook(InputAction.CallbackContext ctx)
     {
-        mouseDelta = ctx.ReadValue<Vector2>();
+        mouseDelta = ctx.ReadValue<Vector2>() * mouseSensitivity;
     }
 
     private void Awake()
@@ -95,18 +95,11 @@ public class PlayerController : MonoBehaviour
     private void CameraMove()
     {
         camRotX -= mouseDelta.y;
-        camRotX = Mathf.Clamp(camRotX, -85f, 85f);
+        camRotX = Mathf.Clamp(camRotX, -90f, 90f);
 
         camRotY += mouseDelta.x;
 
-        camTransform.localRotation = Quaternion.Lerp(
-            camTransform.localRotation,
-            Quaternion.Euler(camRotX, 0, 0f),
-            cameraAcceleration * Time.deltaTime);
-
-        transform.localRotation = Quaternion.Lerp(
-            transform.localRotation,
-            Quaternion.Euler(0, camRotY, 0f),
-            cameraAcceleration * Time.deltaTime);
+        camTransform.localRotation = Quaternion.Euler(camRotX, 0, 0f);
+        transform.localRotation = Quaternion.Euler(0, camRotY, 0f);
     }
 }
