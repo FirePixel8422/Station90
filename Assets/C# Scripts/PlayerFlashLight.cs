@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 public class PlayerFlashLight : MonoBehaviour
@@ -16,9 +15,17 @@ public class PlayerFlashLight : MonoBehaviour
     [Header("How many rings to cast rays in, and how many rays per ring")]
     [SerializeField] private int[] checkRingRayCounts;
 
+    [Header("Flicker Settings")]
+    [SerializeField] private MinMaxFloat flickerIntensityMultiplierMinMax;
+    [SerializeField] private MinMaxFloat flickerDelayMinMax;
+    [SerializeField] private MinMaxFloat flickerTimeMinMax;
 
     private Light flashLight;
     private Camera cam;
+
+    private float nextStateUpdateGlobalTime;
+    private bool isFlickering;
+    private float cIntensityMultiplier;
 
 
     private void Awake()
@@ -35,11 +42,32 @@ public class PlayerFlashLight : MonoBehaviour
     {
         if (TryGetAvgLightDistance(out float distance))
         {
-            flashLight.intensity = GetIntensity(distance);
+            flashLight.intensity = GetIntensity(distance) * cIntensityMultiplier;
         }
         else
         {
-            flashLight.intensity = intensityOnVoid;
+            flashLight.intensity = intensityOnVoid * cIntensityMultiplier;
+        }
+
+        // Wait until next state update delay has passed before executing
+        if (Time.time < nextStateUpdateGlobalTime) return;
+
+        // If lamp was flickering, stabilize it and set 
+        if (isFlickering)
+        {
+            cIntensityMultiplier = 1;
+
+            isFlickering = false;
+            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
+        }
+        // If lamp was flickering, let it flicker
+        else
+        {
+            cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
+            flashLight.intensity *= cIntensityMultiplier;
+
+            isFlickering = true;
+            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
         }
     }
 
@@ -121,6 +149,7 @@ public class PlayerFlashLight : MonoBehaviour
             }
         }
 
+
         if (hitCount == 0)
         {
             avgDistance = 0;
@@ -128,6 +157,7 @@ public class PlayerFlashLight : MonoBehaviour
         }
 
         avgDistance = totalDistance / hitCount;
+        flashLight.transform.LookAt(origin + forward * avgDistance);
         return true;
     }
 }

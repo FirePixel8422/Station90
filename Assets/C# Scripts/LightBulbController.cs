@@ -31,7 +31,7 @@ public class LightBulbController : MonoBehaviour
         {
             for (int i = 0; i < lights.Length; i++)
             {
-                if (lights[i].lightmapBakeType != LightmapBakeType.Realtime) continue;
+                if (lights[i].bakingOutput.lightmapBakeType != LightmapBakeType.Realtime) continue;
 
                 lightSource = lights[i];
                 baseIntensity = lightSource.intensity;

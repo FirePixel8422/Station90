@@ -778,7 +778,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1450199873}
+  - {fileID: 1803654959}
   m_Father: {fileID: 1224962278}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &511830197
@@ -1536,6 +1536,7 @@ GameObject:
   - component: {fileID: 1224962276}
   - component: {fileID: 1224962275}
   - component: {fileID: 1224962279}
+  - component: {fileID: 1224962281}
   - component: {fileID: 1224962274}
   - component: {fileID: 1224962280}
   m_Layer: 0
@@ -1560,8 +1561,9 @@ MonoBehaviour:
   moveSpeed: 2
   groundCheck: {fileID: 1964127960}
   groundCheckLength: 0.05
+  mouseSensitivity: 4
   camTransform: {fileID: 511830196}
-  mouseSensitivity: 5
+  cameraAcceleration: 10000
 --- !u!136 &1224962275
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1569,7 +1571,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1224962273}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 7b87a4e370451ec45ba93886ef8024e7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1581,7 +1583,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.25
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -1607,7 +1609,7 @@ MeshRenderer:
   m_SmallMeshCulling: 1
   m_ForceMeshLod: -1
   m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 64
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
@@ -1650,7 +1652,7 @@ Transform:
   m_GameObject: {fileID: 1224962273}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.03, y: 0.5, z: -0.14}
+  m_LocalPosition: {x: 2.03, y: 1, z: -0.14}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1683,7 +1685,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &1224962280
 MonoBehaviour:
@@ -1723,10 +1725,94 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    valueMultiplier: 35
+    valueMultiplier: 50
     sampleCount: 50
   intensityOnVoid: 1
   checkRingRayCounts: 01000000050000000a000000
+  flickerIntensityMultiplierMinMax:
+    min: 0.2
+    max: 0.65
+  flickerDelayMinMax:
+    min: 0.2
+    max: 2.25
+  flickerTimeMinMax:
+    min: 0.1
+    max: 0.4
+--- !u!114 &1224962281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224962273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 51d402da1c303394eb8bbac9b10d99c6,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1224962274}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 16954cc6-b4de-46ab-8b7e-8b609921cf9d
+    m_ActionName: 'Gameplay/Look[/Mouse/delta]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1224962274}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 10590663-64b2-4a25-b3c4-132e61e1ec6b
+    m_ActionName: 'Gameplay/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b05e5b07-87b9-4855-9288-78e7b75e8689
+    m_ActionName: 'Gameplay/FlashLight[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8710abe0-000c-4573-9583-c4ad649f0390
+    m_ActionName: 'Gameplay/Use[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 264544da-4365-4318-8c4f-97629e00d95e
+    m_ActionName: 'Gameplay/Interact[/Keyboard/e]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Gameplay
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1250291647
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,13 +2065,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450199872}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.053672194, y: -0.013639538, z: -0.03263585, w: 0.99793196}
-  m_LocalPosition: {x: 0.3140049, y: -0.16100001, z: 0.429}
+  m_LocalRotation: {x: -0.051602826, y: -0.052737765, z: -0.0027288662, w: 0.9972705}
+  m_LocalPosition: {x: 0.30900005, y: -0.3039999, z: 0.7149999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 511830196}
-  m_LocalEulerAnglesHint: {x: -6.201, y: -1.367, z: -3.672}
+  m_Father: {fileID: 1803654959}
+  m_LocalEulerAnglesHint: {x: -16.81, y: -1.078, z: 0.343}
 --- !u!114 &1450199874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2028,11 +2114,11 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2
   m_Range: 15
-  m_SpotAngle: 40
+  m_SpotAngle: 45
   m_InnerSpotAngle: 0
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -2057,7 +2143,7 @@ Light:
       e32: 0
       e33: 1
     m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
+  m_Cookie: {fileID: 2800000, guid: c3836fc660e493243ac676d59ef5f5ce, type: 3}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
   m_RenderMode: 0
@@ -2094,7 +2180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: com.cqf.urpvolumetricfog.runtime::VolumetricAdditionalLight
   anisotropy: 0.25
   scattering: 6
-  radius: 0.1
+  radius: 0.075
 --- !u!1 &1470758748
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,6 +2965,38 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1704052760}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1803654958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1803654959}
+  m_Layer: 0
+  m_Name: FlashLight (RotPoint)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1803654959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803654958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1450199873}
+  m_Father: {fileID: 511830196}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1805657103
 GameObject:
   m_ObjectHideFlags: 0

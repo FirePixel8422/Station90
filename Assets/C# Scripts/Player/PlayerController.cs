@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class PlayerController : MonoBehaviour
@@ -9,20 +10,37 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckLength = 0.5f;
 
-    [SerializeField] Transform camTransform;
+    [Header("Camera Settings")]
     [SerializeField] private float mouseSensitivity = 100f;
 
-    private Rigidbody rb;
-    private float xRotation = 0f;
-    private float yRotation = 0f;
+    [Header("Camera Transform and Lerp Speed")]
+    [SerializeField] Transform camTransform;
+    [SerializeField] private float cameraAcceleration = 0.1f;
 
+    private Rigidbody rb;
+
+    private Vector2 moveDir;
+    private Vector2 mouseDelta;
+    private float camRotX = 0f;
+    private float camRotY = 0f;
+
+
+
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        moveDir = ctx.ReadValue<Vector2>();
+    }
+    public void OnLook(InputAction.CallbackContext ctx)
+    {
+        mouseDelta = ctx.ReadValue<Vector2>();
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
-        xRotation = camTransform.localEulerAngles.x;
-        yRotation = transform.localEulerAngles.y;
+        camRotX = camTransform.localEulerAngles.x;
+        camRotY = transform.localEulerAngles.y;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -32,27 +50,27 @@ public class PlayerController : MonoBehaviour
     private void OnUpdate()
     {
         Move();
-        LookAround();
+        CameraMove();
     }
 
+    /// <summary>
+    /// Move the player based on input
+    /// </summary>
     private void Move()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
+        Vector3 forwardDir = transform.TransformDirection(new Vector3(moveDir.x, 0f, moveDir.y));
 
-
-        Vector3 moveDir = new Vector3(moveX, 0f, moveZ).normalized;
-        Vector3 velocity = transform.TransformDirection(moveDir) * moveSpeed + new Vector3(0f, rb.linearVelocity.y, 0f);
-        
+        Vector3 velocity = forwardDir * moveSpeed + new Vector3(0f, rb.linearVelocity.y, 0f);
 
         if (rb.linearVelocity.y > -0.1f && Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundCheckLength))
         {
             velocity = AlignVelocityToRamp(velocity, hit.normal);
         }
-
         rb.linearVelocity = velocity;
     }
-
+    /// <summary>
+    /// Update velocity to be aligned to the ramp normal
+    /// </summary>
     private float3 AlignVelocityToRamp(float3 velocity, float3 normal)
     {
         float3 n = math.normalize(normal);
@@ -70,17 +88,25 @@ public class PlayerController : MonoBehaviour
         return projected * (math.length(velocity) / mag);
     }
 
-    private void LookAround()
+
+    /// <summary>
+    /// Update FPS Camera with Lerping
+    /// </summary>
+    private void CameraMove()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        camRotX -= mouseDelta.y;
+        camRotX = Mathf.Clamp(camRotX, -85f, 85f);
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -85f, 85f);
+        camRotY += mouseDelta.x;
 
-        yRotation += mouseX;
+        camTransform.localRotation = Quaternion.Lerp(
+            camTransform.localRotation,
+            Quaternion.Euler(camRotX, 0, 0f),
+            cameraAcceleration * Time.deltaTime);
 
-        camTransform.localRotation = Quaternion.Euler(xRotation, 0, 0f);
-        transform.localRotation = Quaternion.Euler(0, yRotation, 0f);
+        transform.localRotation = Quaternion.Lerp(
+            transform.localRotation,
+            Quaternion.Euler(0, camRotY, 0f),
+            cameraAcceleration * Time.deltaTime);
     }
 }

@@ -98,7 +98,7 @@ MonoBehaviour:
     m_Value: 128
   enableAPVContribution:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   APVContributionWeight:
     m_OverrideState: 0
     m_Value: 1
@@ -118,11 +118,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   maxSteps:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 128
   blurIterations:
-    m_OverrideState: 0
-    m_Value: 2
+    m_OverrideState: 1
+    m_Value: 3
   enabled:
     m_OverrideState: 1
     m_Value: 1
