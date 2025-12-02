@@ -27,8 +27,8 @@ public class Door : Interactable
         Quaternion rot;
         while (true)
         {
-            rot = transform.rotation;
-            transform.rotation = Quaternion.RotateTowards(rot, targetRot, speed * Time.deltaTime);
+            rot = transform.localRotation;
+            transform.localRotation = Quaternion.RotateTowards(rot, targetRot, speed * Time.deltaTime);
 
             if (Quaternion.Angle(rot, targetRot) < 0.01f)
             {

@@ -5,34 +5,34 @@ using UnityEngine;
 public class Drawer : Interactable
 {
     [SerializeField] private Vector3[] positionStates;
-    [SerializeField] private float rotSpeed = 5;
+    [SerializeField] private float moveSpeed = 5;
 
     private int cPosIndex;
-    private Coroutine rotAnimCO;
+    private Coroutine posAnimCO;
 
 
     protected override void OnInteract()
     {
-        if (rotAnimCO != null)
+        if (posAnimCO != null)
         {
-            StopCoroutine(rotAnimCO);
+            StopCoroutine(posAnimCO);
         }
-        rotAnimCO = StartCoroutine(RotateAnimation(positionStates[cPosIndex], rotSpeed));
+        posAnimCO = StartCoroutine(MoveAnimation(positionStates[cPosIndex], moveSpeed));
 
         cPosIndex.IncrememtSmart(positionStates.Length);
     }
 
-    private IEnumerator RotateAnimation(Vector3 targetPos, float speed)
+    private IEnumerator MoveAnimation(Vector3 targetPos, float speed)
     {
         Vector3 pos;
         while (true)
         {
-            pos = transform.position;
-            transform.position = Vector3.MoveTowards(pos, targetPos, speed * Time.deltaTime);
+            pos = transform.localPosition;
+            transform.localPosition = Vector3.MoveTowards(pos, targetPos, speed * Time.deltaTime);
 
             if (Vector3.Distance(pos, targetPos) < 0.01f)
             {
-                transform.position = targetPos;
+                transform.localPosition = targetPos;
                 yield break;
             }
 

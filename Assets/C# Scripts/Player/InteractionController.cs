@@ -31,8 +31,8 @@ public class InteractionController : MonoBehaviour
         {
             if (heldInteractable != null)
             {
-                heldInteractable = null;
                 heldInteractable.Release();
+                heldInteractable = null;
             }
         }
     }

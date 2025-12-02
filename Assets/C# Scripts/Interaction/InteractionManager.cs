@@ -12,6 +12,10 @@ public class InteractionManager : MonoBehaviour
     private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
     private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
+    private void Awake()
+    {
+        Interactables = new List<Interactable>();
+    }
     private void Start()
     {
         player = InteractionController.Instance;
