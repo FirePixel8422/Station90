@@ -8,7 +8,6 @@ public class Interactable : MonoBehaviour
     [SerializeField] private bool interactable = true;
     public bool IsInteractable => interactable && Time.time >= lastInteractGlobalTime + interactionCooldown;
 
-    [SerializeField] 
 
     private float lastInteractGlobalTime;
 

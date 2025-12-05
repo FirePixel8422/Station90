@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
 {
-    public static List<Interactable> Interactables { get; private set; }
+    public static List<Interactable> Interactables { get; private set; } = new List<Interactable>();
 
     private InteractionController player;
+
 
 
     private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
     private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
-    private void Awake()
-    {
-        Interactables = new List<Interactable>();
-    }
     private void Start()
     {
         player = InteractionController.Instance;

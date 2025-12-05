@@ -60,6 +60,7 @@ public class PlayerFlashLight : MonoBehaviour
     {
         flashLight = GetComponentInChildren<Light>(true);
         cam = GetComponentInChildren<Camera>(true);
+        intensityCurve.Bake();
     }
 
 
@@ -210,5 +211,11 @@ public class PlayerFlashLight : MonoBehaviour
     {
         Vector3 dir = targetPos - from;
         return Quaternion.LookRotation(dir, Vector3.up);
+    }
+
+
+    private void OnDestroy()
+    {
+        intensityCurve.Dispose();
     }
 }
