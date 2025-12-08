@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Door : Interactable
 {
+    [SerializeField] protected string[] popupTexts;
+    private string PopupText => popupTexts[cRotindex];
+
+
     [SerializeField] private Quaternion[] rotationStates;
     [SerializeField] private float rotSpeed = 5;
 
-    private int cRotState;
+    private int cRotindex;
     private Coroutine rotAnimCO;
+
 
 
     protected override void OnInteract()
@@ -17,26 +22,25 @@ public class Door : Interactable
         {
             StopCoroutine(rotAnimCO);
         }
-        rotAnimCO = StartCoroutine(RotateAnimation(rotationStates[cRotState], rotSpeed));
+        rotAnimCO = StartCoroutine(RotateAnimation(rotationStates[cRotindex], rotSpeed));
 
-        cRotState.IncrememtSmart(rotationStates.Length);
+        cRotindex.IncrememtSmart(rotationStates.Length);
     }
 
     private IEnumerator RotateAnimation(Quaternion targetRot, float speed)
     {
-        Quaternion rot;
-        while (true)
+        Quaternion startRot = transform.localRotation;
+        float startTime = Time.time;
+        float t = 0;
+
+        while (t < 1)
         {
-            rot = transform.localRotation;
-            transform.localRotation = Quaternion.RotateTowards(rot, targetRot, speed * Time.deltaTime);
-
-            if (Quaternion.Angle(rot, targetRot) < 0.01f)
-            {
-                transform.rotation = targetRot;
-                yield break;
-            }
-
             yield return null;
+
+            t  = (Time.time - startTime) * speed;
+            transform.localRotation = Quaternion.Lerp(startRot, targetRot, t);
         }
+
+        popupTextObj.text = PopupText;
     }
 }

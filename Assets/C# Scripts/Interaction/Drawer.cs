@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Drawer : Interactable
 {
+    [SerializeField] private string[] popupTexts;
+    private string PopupText => popupTexts[cPosIndex];
+
+
     [SerializeField] private Vector3[] positionStates;
     [SerializeField] private float moveSpeed = 5;
 
@@ -24,19 +28,17 @@ public class Drawer : Interactable
 
     private IEnumerator MoveAnimation(Vector3 targetPos, float speed)
     {
-        Vector3 pos;
-        while (true)
+        Vector3 startPos = transform.localPosition;
+        float startTime = Time.time;
+        float t = 0;
+
+        while (t < 1)
         {
-            pos = transform.localPosition;
-            transform.localPosition = Vector3.MoveTowards(pos, targetPos, speed * Time.deltaTime);
-
-            if (Vector3.Distance(pos, targetPos) < 0.01f)
-            {
-                transform.localPosition = targetPos;
-                yield break;
-            }
-
             yield return null;
+
+            t = (Time.time - startTime) * speed;
+            transform.localPosition = Vector3.Lerp(startPos, targetPos, t);
         }
+        popupTextObj.text = PopupText;
     }
 }

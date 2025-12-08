@@ -10,6 +10,9 @@ public class InteractionController : MonoBehaviour
         Instance = this;
     }
 
+    [SerializeField] private Transform interactionTransform;
+    public Vector3 InteractionTransformPos => interactionTransform.position;
+
 
     public float InteractionRange;
     public float InteractionDot;

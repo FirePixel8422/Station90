@@ -6,7 +6,11 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI popupText;
+    [SerializeField] private Vector3 interactionOffset;
+    public Vector3 InteractionPosition => transform.position + interactionOffset;
+
+
+    [SerializeField] protected TextMeshPro popupTextObj;
     [SerializeField] private float popupFadeSpeed = 5;
 
     [SerializeField] private float interactionCooldown;
@@ -24,6 +28,7 @@ public class Interactable : MonoBehaviour
     private void Awake()
     {
         lastInteractGlobalTime = -interactionCooldown;
+        popupTextObj.color = new Color(popupTextObj.color.r, popupTextObj.color.g, popupTextObj.color.b, 0f);
     }
 
     private void OnEnable() => InteractionManager.Interactables.Add(this);
@@ -68,7 +73,7 @@ public class Interactable : MonoBehaviour
 
     private IEnumerator FadePopup(float start, float end, float speed)
     {
-        Color newCol = popupText.color;
+        Color newCol = popupTextObj.color;
         float startTime = Time.time;
         float t = 0;
 
@@ -76,10 +81,16 @@ public class Interactable : MonoBehaviour
         {
             yield return null;
 
-            t = (Time.time - startTime) * popupFadeSpeed;
+            t = (Time.time - startTime) * speed;
             newCol.a = math.lerp(start, end, t);
 
-            popupText.color = newCol;
+            popupTextObj.color = newCol;
         }
+    }
+
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(InteractionPosition, 0.5f);
     }
 }
