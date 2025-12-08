@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class PlayerFlashLight : MonoBehaviour
+public class PlayerFlashlight : MonoBehaviour
 {
     [Header("Max distance before the flashlights intensity becomes value 0 of the curve")]
     [SerializeField] private float maxLightDistance = 15;
@@ -17,51 +17,50 @@ public class PlayerFlashLight : MonoBehaviour
     [Header("How many rings to cast rays in, and how many rays per ring")]
     [SerializeField] private int[] checkRingRayCounts;
 
-    [Header("Flicker Settings")]
-    [SerializeField] private MinMaxFloat flickerIntensityMultiplierMinMax;
-    [SerializeField] private MinMaxFloat flickerDelayMinMax;
-    [SerializeField] private MinMaxFloat flickerTimeMinMax;
-
     [Header("Max flashlight tilt angle")]
     [SerializeField] private float maxFlashlightTiltAngle = 25f;
 
-    [Header("Power Down Settings")]
-    [SerializeField] private float powerDownDuration = 2f;
-    [Header("Flashlight intensity lerp speed")]
+    [Header("Flashlight toggle delay and intensity update speed")]
     [SerializeField] private float flashlightLerpSpeed = 2f;
+    [SerializeField] private float flashlightToggleDelay = 0.2f; 
 
-    private Light flashLight;
+    [Header("Flashlight SFX")]
+    [SerializeField] private AudioSource flashlightAudioSource;
+    [SerializeField] private MinMaxFloat randomPitchMinMax = new MinMaxFloat(0.9f, 1.1f);
+    [SerializeField] private AudioClip flashlightToggleOnClip;
+    [SerializeField] private AudioClip flashlightToggleOffClip;
+
+    private Light flashlight;
     private Camera cam;
 
     private bool isEnabled = true;
-    public float cIntensity;
-
-    private bool isFlickering;
-    private float nextStateUpdateGlobalTime;
-    public float cIntensityMultiplier;
+    private float cIntensity;
 
 
 
-    public void OnFlashLightToggle(InputAction.CallbackContext ctx)
+    public void OnFlashlightToggle(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        if (ctx.performed)  
         {
-            isEnabled = !isEnabled;
+            Invoke(nameof(ToggleFlashlightAfterDelay), flashlightToggleDelay);
 
-            if (isEnabled == false)
-            {
-                cIntensity = 0;
-            }
+            flashlightAudioSource.PlayOneShotClipWithPitch(isEnabled ? flashlightToggleOnClip : flashlightToggleOffClip, EzRandom.Range(randomPitchMinMax));
         }
     }
-
+    private void ToggleFlashlightAfterDelay()
+    {
+        isEnabled = !isEnabled;
+        if (isEnabled == false)
+        {
+            cIntensity = 0;
+        }
+    }
     private void Awake()
     {
-        flashLight = GetComponentInChildren<Light>(true);
+        flashlight = GetComponentInChildren<Light>(true);
         cam = GetComponentInChildren<Camera>(true);
         intensityCurve.Bake();
     }
-
 
     private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
     private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
@@ -70,54 +69,24 @@ public class PlayerFlashLight : MonoBehaviour
     {
         if (isEnabled)
         {
-            UpdateFlashLightIntensity();
+            UpdateFlashlightIntensity();
         }
 
-        flashLight.intensity = math.lerp(flashLight.intensity, cIntensity, flashlightLerpSpeed * Time.deltaTime);
+        flashlight.intensity = math.lerp(flashlight.intensity, cIntensity, flashlightLerpSpeed * Time.deltaTime);
     }
-
-    private void UpdateFlashLightIntensity()
+    private void UpdateFlashlightIntensity()
     {
-        if (TryGetAvgLightDistance(out float distance))
-        {
-            cIntensity = GetIntensity(distance) * cIntensityMultiplier;
-        }
-        else
-        {
-            cIntensity = intensityOnVoid * cIntensityMultiplier;
-        }
+        bool doesFlashlightSeeWall = TryGetAvgLightDistance(out float distance);
 
-        // Wait until next state update delay has passed before executing
-        if (Time.time < nextStateUpdateGlobalTime) return;
-
-        // Toggle flickering state
-        isFlickering = !isFlickering;
-
-        // If Lamp starts flickering now
-        if (isFlickering)
-        {
-            cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
-
-            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
-        }
-        // If lamp is no longer flickering, let it flicker
-        else
-        {
-            cIntensityMultiplier = 1;
-
-            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
-        }
-    }
-
-    private float GetIntensity(float distance)
-    {
-        return intensityCurve.Evaluate(distance / maxLightDistance);
+        cIntensity = doesFlashlightSeeWall ?
+            intensityCurve.Evaluate(distance / maxLightDistance) :
+            intensityOnVoid;
     }
 
 
-    public bool TryGetAvgLightDistance(out float avgDistance)
+    private bool TryGetAvgLightDistance(out float avgDistance)
     {
-        Vector3 flashLightPos = flashLight.transform.position;
+        Vector3 flashlightPos = flashlight.transform.position;
 
         Vector3 center = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
         Ray centerRay = cam.ScreenPointToRay(center);
@@ -125,7 +94,7 @@ public class PlayerFlashLight : MonoBehaviour
         Vector3 origin = centerRay.origin;
         Vector3 forward = centerRay.direction;
 
-        float coneRad = flashLight.spotAngle * Mathf.Deg2Rad;
+        float coneRad = flashlight.spotAngle * Mathf.Deg2Rad;
 
         float totalDistance = 0;
         int hitCount = 0;
@@ -160,7 +129,7 @@ public class PlayerFlashLight : MonoBehaviour
 
                 if (Physics.Raycast(origin, dirSingle, out RaycastHit hit, maxLightDistance))
                 {
-                    totalDistance += Vector3.Distance(flashLightPos, hit.point);
+                    totalDistance += Vector3.Distance(flashlightPos, hit.point);
                     hitCount += 1;
                 }
                 continue;
@@ -181,12 +150,11 @@ public class PlayerFlashLight : MonoBehaviour
 
                 if (Physics.Raycast(origin, dir, out RaycastHit hit, maxLightDistance))
                 {
-                    totalDistance += Vector3.Distance(flashLightPos, hit.point);
+                    totalDistance += Vector3.Distance(flashlightPos, hit.point);
                     hitCount++;
                 }
             }
         }
-
 
         if (hitCount == 0)
         {
@@ -196,18 +164,16 @@ public class PlayerFlashLight : MonoBehaviour
 
         avgDistance = totalDistance / hitCount;
 
-        Quaternion lookRotation = GetLookRotation(flashLight.transform.position, origin + forward * avgDistance);
-        float angleDiff = Quaternion.Angle(flashLight.transform.rotation, lookRotation);
+        Quaternion lookRotation = GetLookRotation(flashlight.transform.position, origin + forward * avgDistance);
+        float angleDiff = Quaternion.Angle(flashlight.transform.rotation, lookRotation);
 
-        lookRotation = Quaternion.RotateTowards(lookRotation, flashLight.transform.rotation, Mathf.MoveTowards(angleDiff, 0, maxFlashlightTiltAngle));
-        flashLight.transform.rotation = lookRotation;
+        lookRotation = Quaternion.RotateTowards(lookRotation, flashlight.transform.rotation, Mathf.MoveTowards(angleDiff, 0, maxFlashlightTiltAngle));
+        flashlight.transform.rotation = lookRotation;
 
-        flashLight.transform.localEulerAngles = new Vector3(flashLight.transform.localEulerAngles.x, flashLight.transform.localEulerAngles.y, 0f);
+        flashlight.transform.localEulerAngles = new Vector3(flashlight.transform.localEulerAngles.x, flashlight.transform.localEulerAngles.y, 0f);
         return true;
     }
-
-
-    public static Quaternion GetLookRotation(Vector3 from, Vector3 targetPos)
+    private Quaternion GetLookRotation(Vector3 from, Vector3 targetPos)
     {
         Vector3 dir = targetPos - from;
         return Quaternion.LookRotation(dir, Vector3.up);

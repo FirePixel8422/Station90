@@ -74,5 +74,7 @@ public class LightBulbController : MonoBehaviour
             isFlickering = true;
             nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
         }
+
+        UpdateEmission(lightBulbRenderer, lightColor * lightSource.intensity * 10);
     }
 }
