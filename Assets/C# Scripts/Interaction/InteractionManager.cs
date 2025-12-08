@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 
@@ -25,14 +26,19 @@ public class InteractionManager : MonoBehaviour
         if (itemCount == 0) return;
 
         Vector3 playerPos = player.transform.position;
-        Interactable item;
+        Interactable newItem;
 
         for (int i = 0; i < itemCount; i++)
         {
-            item = Interactables[i];
+            newItem = Interactables[i];
 
-            bool itemInRange = item.IsInteractable && Vector3.Distance(playerPos, item.transform.position) <= player.InteractionRange;
-            item.SetPopupActiveState(itemInRange);
+            bool isItemInRange = newItem.IsInteractable && Vector3.Distance(playerPos, newItem.transform.position) <= player.InteractionRange;
+            bool isItemInFront = Vector3.Dot(player.transform.forward, (newItem.transform.position - playerPos).normalized) > player.InteractionDot;
+
+            if (isItemInRange && isItemInFront)
+            {
+                newItem.SetPopupActiveState(true);
+            }
         }
     }
 }

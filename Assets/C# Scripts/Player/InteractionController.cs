@@ -12,6 +12,7 @@ public class InteractionController : MonoBehaviour
 
 
     public float InteractionRange;
+    public float InteractionDot;
     private Interactable heldInteractable;
 
 

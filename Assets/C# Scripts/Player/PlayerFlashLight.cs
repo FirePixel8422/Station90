@@ -27,17 +27,18 @@ public class PlayerFlashLight : MonoBehaviour
 
     [Header("Power Down Settings")]
     [SerializeField] private float powerDownDuration = 2f;
+    [Header("Flashlight intensity lerp speed")]
+    [SerializeField] private float flashlightLerpSpeed = 2f;
 
     private Light flashLight;
     private Camera cam;
 
     private bool isEnabled = true;
-    private float fullPowerDownGlobalTime;
-    private float powerDownStartIntensity;
+    public float cIntensity;
 
     private bool isFlickering;
     private float nextStateUpdateGlobalTime;
-    private float cIntensityMultiplier;
+    public float cIntensityMultiplier;
 
 
 
@@ -47,11 +48,9 @@ public class PlayerFlashLight : MonoBehaviour
         {
             isEnabled = !isEnabled;
 
-            // Turned On
-            if (isEnabled)
+            if (isEnabled == false)
             {
-                powerDownStartIntensity = flashLight.intensity;
-                fullPowerDownGlobalTime = Time.time + powerDownDuration;
+                cIntensity = 0;
             }
         }
     }
@@ -71,41 +70,42 @@ public class PlayerFlashLight : MonoBehaviour
     {
         if (isEnabled)
         {
-            if (TryGetAvgLightDistance(out float distance))
-            {
-                flashLight.intensity = GetIntensity(distance) * cIntensityMultiplier;
-            }
-            else
-            {
-                flashLight.intensity = intensityOnVoid * cIntensityMultiplier;
-            }
+            UpdateFlashLightIntensity();
+        }
 
-            // Wait until next state update delay has passed before executing
-            if (Time.time < nextStateUpdateGlobalTime) return;
+        flashLight.intensity = math.lerp(flashLight.intensity, cIntensity, flashlightLerpSpeed * Time.deltaTime);
+    }
 
-            // Toggle flickering state
-            isFlickering = !isFlickering;
-            
-            // If Lamp starts flickering now
-            if (isFlickering)
-            {
-                cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
-                flashLight.intensity *= cIntensityMultiplier;
-
-                nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
-            }
-            // If lamp is no longer flickering, let it flicker
-            else
-            {
-                cIntensityMultiplier = 1;
-
-                nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
-            }
+    private void UpdateFlashLightIntensity()
+    {
+        if (TryGetAvgLightDistance(out float distance))
+        {
+            cIntensity = GetIntensity(distance) * cIntensityMultiplier;
         }
         else
         {
-            float powerPercentage01 = math.clamp(fullPowerDownGlobalTime - Time.time, 0, int.MaxValue) / powerDownDuration;
-            flashLight.intensity = powerDownStartIntensity * powerPercentage01;
+            cIntensity = intensityOnVoid * cIntensityMultiplier;
+        }
+
+        // Wait until next state update delay has passed before executing
+        if (Time.time < nextStateUpdateGlobalTime) return;
+
+        // Toggle flickering state
+        isFlickering = !isFlickering;
+
+        // If Lamp starts flickering now
+        if (isFlickering)
+        {
+            cIntensityMultiplier = EzRandom.Range(flickerIntensityMultiplierMinMax);
+
+            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
+        }
+        // If lamp is no longer flickering, let it flicker
+        else
+        {
+            cIntensityMultiplier = 1;
+
+            nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
         }
     }
 

@@ -343,7 +343,6 @@ public static class ExtensionMethods
     /// <summary>
     /// Increments index by 1 and wraps to 0 if it reaches length
     /// </summary>
-    /// <param name="length"></param>
     public static void IncrememtSmart(this ref int value, int length)
     {
         value += 1;
