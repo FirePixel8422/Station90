@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TooltipManager : MonoBehaviour
+public class TooltipManager : UpdateMonoBehaviour
 {
     public static TooltipManager Instance { get; private set; }
 
@@ -23,11 +23,8 @@ public class TooltipManager : MonoBehaviour
     private TextMeshProUGUI lastTextObject;
 
     [SerializeField] private float toolTipHeight = 40f;
-    private bool updated;
+    private bool isUpdated;
 
-
-    public void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    public void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
     private void Start()
     {
@@ -52,7 +49,7 @@ public class TooltipManager : MonoBehaviour
         activeTooltip.SetActive(false);
     }
 
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         Vector3 mousePos = Input.mousePosition;
         Vector2 screenSize = new Vector2(Screen.width, Screen.height);
@@ -72,12 +69,12 @@ public class TooltipManager : MonoBehaviour
                 // Skip if same word on same TextMeshPro as last frame
                 if (tooltipText == lastTooltipText && tmpText == lastTextObject)
                 {
-                    if (updated) return;
-                    updated = true;
+                    if (isUpdated) return;
+                    isUpdated = true;
                 }
                 else
                 {
-                    updated = false;
+                    isUpdated = false;
                     lastTooltipText = tooltipText;
                     lastTextObject = tmpText;
                 }

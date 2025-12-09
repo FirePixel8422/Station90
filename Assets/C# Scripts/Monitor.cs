@@ -1,8 +1,9 @@
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 
-public class Monitor : MonoBehaviour
+public class Monitor : UpdateMonoBehaviour
 {
     [SerializeField] private Transform staticScreenCamHolder;
 
@@ -17,11 +18,6 @@ public class Monitor : MonoBehaviour
 
     private float nextCamUpdateGlobalTime;
 
-
-
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
     private void Start()
     {
         monitorCamera = GetComponentInChildren<Camera>();
@@ -32,7 +28,7 @@ public class Monitor : MonoBehaviour
         gameCameras[selectedCameraIndex].SetupCamera(monitorCamera);
     }
 
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         if (Time.time > nextCamUpdateGlobalTime)
         {

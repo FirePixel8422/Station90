@@ -23,12 +23,9 @@ public class InteractionController : MonoBehaviour
     {
         if (ctx.performed)
         {
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, InteractionRange))
+            if (InteractionManager.TryGetActiveItem(out heldInteractable) && heldInteractable.IsInteractable)
             {
-                if (hit.collider.TryGetComponent(out heldInteractable) && heldInteractable.IsInteractable)
-                {
-                    heldInteractable.TryInteract();
-                }
+                heldInteractable.TryInteract();
             }
         }
         if (ctx.canceled)

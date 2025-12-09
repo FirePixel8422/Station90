@@ -1,16 +1,19 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 
-public class LightBulbController : MonoBehaviour
+public class LightBulbController : UpdateMonoBehaviour
 {
     [Header("EmmisionColor of the lightbulb model")]
     [ColorUsage(true, true)]
     [SerializeField] private Color lightColor = new Color(1, 0, 0, 1);
 
     [Header("Flicker Settings")]
-    [SerializeField] private MinMaxFloat flickerIntensityMinMax;
     [SerializeField] private MinMaxFloat flickerDelayMinMax;
     [SerializeField] private MinMaxFloat flickerTimeMinMax;
+
+    [Header("Intensity multiplier for the lightbulb materials emission")]
+    [SerializeField] private float matEmmissionMultiplier = 10;
 
 
     private Light lightSource;
@@ -50,31 +53,24 @@ public class LightBulbController : MonoBehaviour
         renderer.SetPropertyBlock(mpb);
     }
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
-        // Wait until next state update delay has passed before executing
+        // Wait until next state update delay has passed before toggling flicker state
         if (Time.time < nextStateUpdateGlobalTime) return;
 
-        // If lamp was flickering, stabilize it and set 
-        if (isFlickering)
+        isFlickering = !isFlickering;
+
+        if (isFlickering == false)
         {
             lightSource.intensity = baseIntensity;
-
-            isFlickering = false;
             nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerDelayMinMax);
         }
-        // If lamp was flickering, let it flicker
         else
         {
-            lightSource.intensity = EzRandom.Range(flickerIntensityMinMax);
-
-            isFlickering = true;
+            lightSource.intensity = 0;
             nextStateUpdateGlobalTime = Time.time + EzRandom.Range(flickerTimeMinMax);
         }
 
-        UpdateEmission(lightBulbRenderer, lightColor * lightSource.intensity * 10);
+        UpdateEmission(lightBulbRenderer, lightColor * lightSource.intensity * matEmmissionMultiplier);
     }
 }

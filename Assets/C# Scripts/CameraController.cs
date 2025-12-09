@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class CameraController : MonoBehaviour
+public class CameraController : UpdateMonoBehaviour
 {
     [SerializeField] private Transform rotatePoint;
     [SerializeField] private Transform cameraHolder;
@@ -19,10 +19,8 @@ public class CameraController : MonoBehaviour
         randomTimeOffset = Random.Range(-25f, 25f);
     }
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         rotatePoint.rotation = Quaternion.Euler(0, startRot + rotAngle * 0.5f * Mathf.Sin((Time.time + randomTimeOffset) * rotateSpeed), 0);
     }

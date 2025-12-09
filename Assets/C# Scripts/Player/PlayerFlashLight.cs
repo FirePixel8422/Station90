@@ -3,34 +3,36 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class PlayerFlashlight : MonoBehaviour
+public class PlayerFlashlight : UpdateMonoBehaviour
 {
-    [Header("Max distance before the flashlights intensity becomes value 0 of the curve")]
+    [SerializeField] private Transform flashlightTransform;
+
+    [Header("Max distance before the flashlightLights intensity becomes value 0 of the curve")]
     [SerializeField] private float maxLightDistance = 15;
 
     [Header("Intensity based on percentage of distance from maxLightDistance")]
     [SerializeField] private NativeSampledAnimationCurve intensityCurve = NativeSampledAnimationCurve.Default;
 
-    [Header("Intensity to assign the flashlight when no surfaces are hit with the ray check")]
+    [Header("Intensity to assign the flashlightLight when no surfaces are hit with the ray check")]
     [SerializeField] private float intensityOnVoid = 1;
 
     [Header("How many rings to cast rays in, and how many rays per ring")]
     [SerializeField] private int[] checkRingRayCounts;
 
-    [Header("Max flashlight tilt angle")]
+    [Header("Max flashlightLight tilt angle")]
     [SerializeField] private float maxFlashlightTiltAngle = 25f;
 
     [Header("Flashlight toggle delay and intensity update speed")]
-    [SerializeField] private float flashlightLerpSpeed = 2f;
-    [SerializeField] private float flashlightToggleDelay = 0.2f; 
+    [SerializeField] private float flashlightLightLerpSpeed = 2f;
+    [SerializeField] private float flashlightLightToggleDelay = 0.2f; 
 
     [Header("Flashlight SFX")]
-    [SerializeField] private AudioSource flashlightAudioSource;
+    [SerializeField] private AudioSource flashlightLightAudioSource;
     [SerializeField] private MinMaxFloat randomPitchMinMax = new MinMaxFloat(0.9f, 1.1f);
-    [SerializeField] private AudioClip flashlightToggleOnClip;
-    [SerializeField] private AudioClip flashlightToggleOffClip;
+    [SerializeField] private AudioClip flashlightLightToggleOnClip;
+    [SerializeField] private AudioClip flashlightLightToggleOffClip;
 
-    private Light flashlight;
+    private Light flashlightLight;
     private Camera cam;
 
     private bool isEnabled = true;
@@ -42,9 +44,9 @@ public class PlayerFlashlight : MonoBehaviour
     {
         if (ctx.performed)  
         {
-            Invoke(nameof(ToggleFlashlightAfterDelay), flashlightToggleDelay);
+            Invoke(nameof(ToggleFlashlightAfterDelay), flashlightLightToggleDelay);
 
-            flashlightAudioSource.PlayOneShotClipWithPitch(isEnabled ? flashlightToggleOnClip : flashlightToggleOffClip, EzRandom.Range(randomPitchMinMax));
+            flashlightLightAudioSource.PlayOneShotClipWithPitch(isEnabled ? flashlightLightToggleOnClip : flashlightLightToggleOffClip, EzRandom.Range(randomPitchMinMax));
         }
     }
     private void ToggleFlashlightAfterDelay()
@@ -57,22 +59,19 @@ public class PlayerFlashlight : MonoBehaviour
     }
     private void Awake()
     {
-        flashlight = GetComponentInChildren<Light>(true);
+        flashlightLight = GetComponentInChildren<Light>(true);
         cam = GetComponentInChildren<Camera>(true);
         intensityCurve.Bake();
     }
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         if (isEnabled)
         {
             UpdateFlashlightIntensity();
         }
 
-        flashlight.intensity = math.lerp(flashlight.intensity, cIntensity, flashlightLerpSpeed * Time.deltaTime);
+        flashlightLight.intensity = math.lerp(flashlightLight.intensity, cIntensity, flashlightLightLerpSpeed * Time.deltaTime);
     }
     private void UpdateFlashlightIntensity()
     {
@@ -86,7 +85,7 @@ public class PlayerFlashlight : MonoBehaviour
 
     private bool TryGetAvgLightDistance(out float avgDistance)
     {
-        Vector3 flashlightPos = flashlight.transform.position;
+        Vector3 flashlightLightPos = flashlightLight.transform.position;
 
         Vector3 center = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f);
         Ray centerRay = cam.ScreenPointToRay(center);
@@ -94,7 +93,7 @@ public class PlayerFlashlight : MonoBehaviour
         Vector3 origin = centerRay.origin;
         Vector3 forward = centerRay.direction;
 
-        float coneRad = flashlight.spotAngle * Mathf.Deg2Rad;
+        float coneRad = flashlightLight.spotAngle * Mathf.Deg2Rad;
 
         float totalDistance = 0;
         int hitCount = 0;
@@ -129,7 +128,7 @@ public class PlayerFlashlight : MonoBehaviour
 
                 if (Physics.Raycast(origin, dirSingle, out RaycastHit hit, maxLightDistance))
                 {
-                    totalDistance += Vector3.Distance(flashlightPos, hit.point);
+                    totalDistance += Vector3.Distance(flashlightLightPos, hit.point);
                     hitCount += 1;
                 }
                 continue;
@@ -150,7 +149,7 @@ public class PlayerFlashlight : MonoBehaviour
 
                 if (Physics.Raycast(origin, dir, out RaycastHit hit, maxLightDistance))
                 {
-                    totalDistance += Vector3.Distance(flashlightPos, hit.point);
+                    totalDistance += Vector3.Distance(flashlightLightPos, hit.point);
                     hitCount++;
                 }
             }
@@ -164,13 +163,13 @@ public class PlayerFlashlight : MonoBehaviour
 
         avgDistance = totalDistance / hitCount;
 
-        Quaternion lookRotation = GetLookRotation(flashlight.transform.position, origin + forward * avgDistance);
-        float angleDiff = Quaternion.Angle(flashlight.transform.rotation, lookRotation);
+        Quaternion lookRotation = GetLookRotation(flashlightTransform.position, origin + forward * avgDistance);
+        float angleDiff = Quaternion.Angle(flashlightTransform.rotation, lookRotation);
 
-        lookRotation = Quaternion.RotateTowards(lookRotation, flashlight.transform.rotation, Mathf.MoveTowards(angleDiff, 0, maxFlashlightTiltAngle));
-        flashlight.transform.rotation = lookRotation;
+        lookRotation = Quaternion.RotateTowards(lookRotation, flashlightTransform.rotation, Mathf.MoveTowards(angleDiff, 0, maxFlashlightTiltAngle));
+        flashlightTransform.rotation = lookRotation;
 
-        flashlight.transform.localEulerAngles = new Vector3(flashlight.transform.localEulerAngles.x, flashlight.transform.localEulerAngles.y, 0f);
+        flashlightTransform.localEulerAngles = new Vector3(flashlightTransform.localEulerAngles.x, flashlightTransform.localEulerAngles.y, 0f);
         return true;
     }
     private Quaternion GetLookRotation(Vector3 from, Vector3 targetPos)

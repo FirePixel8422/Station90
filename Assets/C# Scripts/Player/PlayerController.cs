@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : UpdateMonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
 
@@ -44,10 +44,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         Move();
         CameraMove();

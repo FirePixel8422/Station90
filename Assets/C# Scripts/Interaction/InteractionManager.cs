@@ -2,25 +2,24 @@
 using UnityEngine;
 
 
-public class InteractionManager : MonoBehaviour
+public class InteractionManager : UpdateMonoBehaviour
 {
     public static List<Interactable> Interactables { get; private set; } = new List<Interactable>();
 
+    /// <summary>
+    /// The interactable item the play is currently looking at
+    /// </summary>
+    private static Interactable SelectedItem { get; set; }
+
     private InteractionController player;
-    private Interactable activeInteractable;
 
-
-
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
     private void Start()
     {
         player = InteractionController.Instance;
     }
 
-
-    private void OnUpdate()
+    protected override void OnUpdate()
     {
         int itemCount = Interactables.Count;
         if (itemCount == 0) return;
@@ -57,25 +56,28 @@ public class InteractionManager : MonoBehaviour
     /// </summary>
     private void UpdateItems(int closestValidItemId)
     {
-        if (closestValidItemId != -1)
-        {
-            if (Interactables[closestValidItemId] == activeInteractable) return;
+        Interactable newActive = closestValidItemId != -1 ? Interactables[closestValidItemId] : null;
 
-            Interactables[closestValidItemId].SetPopupActiveState(true);
+        // If the selection hasn’t changed, do nothing
+        if (newActive == SelectedItem) return;
 
-            if (activeInteractable != null)
-            {
-                activeInteractable.SetPopupActiveState(false);
-            }
-            activeInteractable = Interactables[closestValidItemId];
-        }
-        else
+        if (SelectedItem != null)
         {
-            if (activeInteractable != null)
-            {
-                activeInteractable.SetPopupActiveState(false);
-                activeInteractable = null;
-            }
+            SelectedItem.SetPopupActiveState(false);
         }
+
+        if (newActive != null)
+        {
+            newActive.SetPopupActiveState(true);
+        }
+
+        SelectedItem = newActive;
+    }
+
+    public static bool TryGetActiveItem(out Interactable item)
+    {
+        item = SelectedItem;
+
+        return item != null;
     }
 }
