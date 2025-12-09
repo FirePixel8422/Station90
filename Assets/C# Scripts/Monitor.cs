@@ -18,6 +18,7 @@ public class Monitor : UpdateMonoBehaviour
 
     private float nextCamUpdateGlobalTime;
 
+
     private void Start()
     {
         monitorCamera = GetComponentInChildren<Camera>();

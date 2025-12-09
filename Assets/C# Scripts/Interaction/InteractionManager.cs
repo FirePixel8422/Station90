@@ -10,6 +10,8 @@ public class InteractionManager : UpdateMonoBehaviour
     /// The interactable item the play is currently looking at
     /// </summary>
     private static Interactable SelectedItem { get; set; }
+    public static bool IsAnyItemSelected => SelectedItem != null;
+
 
     private InteractionController player;
 
@@ -48,30 +50,9 @@ public class InteractionManager : UpdateMonoBehaviour
             }
         }
 
-        UpdateItems(closestValidItemId);
-    }
-
-    /// <summary>
-    /// Update new item and previously selected item
-    /// </summary>
-    private void UpdateItems(int closestValidItemId)
-    {
-        Interactable newActive = closestValidItemId != -1 ? Interactables[closestValidItemId] : null;
-
-        // If the selection hasn’t changed, do nothing
-        if (newActive == SelectedItem) return;
-
-        if (SelectedItem != null)
-        {
-            SelectedItem.SetPopupActiveState(false);
-        }
-
-        if (newActive != null)
-        {
-            newActive.SetPopupActiveState(true);
-        }
-
-        SelectedItem = newActive;
+        SelectedItem = closestValidItemId == -1 ?
+            null :
+            Interactables[closestValidItemId];
     }
 
     public static bool TryGetActiveItem(out Interactable item)

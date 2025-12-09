@@ -2,20 +2,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class InteractionController : MonoBehaviour
+public class InteractionController : UpdateMonoBehaviour
 {
     public static InteractionController Instance { get; private set; }
-    private void Awake()
-    {
-        Instance = this;
-    }
+    
 
     [SerializeField] private Transform interactionTransform;
     public Vector3 InteractionTransformPos => interactionTransform.position;
 
 
-    public float InteractionRange;
-    public float InteractionDot;
+    [SerializeField] private CrosshairHandler crosshairHandler;
+    [SerializeField] private PlayerInventory inventory;
+
+
+    [SerializeField] private float interactionRange;
+    [SerializeField] private float interactionDot;
+    public float InteractionRange => interactionRange;
+    public float InteractionDot => interactionDot;
+
+
     private Interactable heldInteractable;
 
 
@@ -36,6 +41,16 @@ public class InteractionController : MonoBehaviour
                 heldInteractable = null;
             }
         }
+    }
+
+    private void Awake()
+    {
+        Instance = this;
+        crosshairHandler.Init();
+    }
+    protected override void OnUpdate()
+    {
+        crosshairHandler.OnUpdate(InteractionManager.IsAnyItemSelected);
     }
 
     private void OnDrawGizmosSelected()

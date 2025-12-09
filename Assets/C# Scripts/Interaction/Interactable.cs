@@ -20,9 +20,6 @@ public class Interactable : MonoBehaviour
 
     private float lastInteractGlobalTime;
 
-    private bool isPopupActive;
-    private Coroutine activePopupFadeCO;
-
 
 
     private void Awake()
@@ -52,45 +49,52 @@ public class Interactable : MonoBehaviour
     protected virtual void OnRelease() { }
 
 
-    public void SetPopupActiveState(bool newState)
-    {
-        // Return if newState == currentState
-        if (isPopupActive == newState) return;
+    /// OLD POPUP CODE
+    /// OLD POPUP CODE
+    /// OLD POPUP CODE
+    /// OLD POPUP CODE
+    // OLD POPUP CODE
+    // OLD POPUP CODE
+    // OLD POPUP CODE
+    //public void SetPopupActiveState(bool newState)
+    //{
+    //    // Return if newState == currentState
+    //    if (isPopupActive == newState) return;
 
-        // Update value
-        isPopupActive = newState;
+    //    // Update value
+    //    isPopupActive = newState;
 
-        if (activePopupFadeCO != null)
-        {
-            StopCoroutine(activePopupFadeCO);
-        }
+    //    if (activePopupFadeCO != null)
+    //    {
+    //        StopCoroutine(activePopupFadeCO);
+    //    }
 
-        float start = newState ? 0f : 1f;
-        float end = newState ? 1f : 0f;
+    //    float start = newState ? 0f : 1f;
+    //    float end = newState ? 1f : 0f;
 
-        activePopupFadeCO = StartCoroutine(FadePopup(start, end, popupFadeSpeed));
-    }
+    //    activePopupFadeCO = StartCoroutine(FadePopup(start, end, popupFadeSpeed));
+    //}
 
-    private IEnumerator FadePopup(float start, float end, float speed)
-    {
-        Color newCol = popupTextObj.color;
-        float startTime = Time.time;
-        float t = 0;
+    //private IEnumerator FadePopup(float start, float end, float speed)
+    //{
+    //    Color newCol = popupTextObj.color;
+    //    float startTime = Time.time;
+    //    float t = 0;
 
-        while (t < 1)
-        {
-            yield return null;
+    //    while (t < 1)
+    //    {
+    //        yield return null;
 
-            t = (Time.time - startTime) * speed;
-            newCol.a = math.lerp(start, end, t);
+    //        t = (Time.time - startTime) * speed;
+    //        newCol.a = math.lerp(start, end, t);
 
-            popupTextObj.color = newCol;
-        }
-    }
+    //        popupTextObj.color = newCol;
+    //    }
+    //}
 
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(InteractionPosition, 0.5f);
+        Gizmos.DrawWireSphere(InteractionPosition, 0.25f);
     }
 }
