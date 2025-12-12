@@ -1712,37 +1712,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1181604316}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1237637936
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1237637937}
-  m_Layer: 0
-  m_Name: Interaction Transform
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1237637937
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1237637936}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0.25000003}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637347942}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1250291647
 GameObject:
   m_ObjectHideFlags: 0
@@ -2452,18 +2421,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 732428625}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1631067379 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6215161063890405267, guid: ea083338810dfc145994ddab1231213b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2232365686626202056}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1637347942 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2232365686626202056}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1681395514
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,109 +2910,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1905295514 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 158292405378810177, guid: ea083338810dfc145994ddab1231213b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2232365686626202056}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1905295523
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905295514}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &1919041614
 GameObject:
   m_ObjectHideFlags: 0
@@ -3895,141 +3749,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: intensityOnVoid
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightLerpSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightTransform
-      value: 
-      objectReference: {fileID: 1631067379}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightAudioSource
-      value: 
-      objectReference: {fileID: 1905295523}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightToggleDelay
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: randomPitchMinMax.max
-      value: 1.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: randomPitchMinMax.min
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightToggleOnClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 1f9d88f2bcee3b54e8757cf52e6a427b, type: 3}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightToggleOffClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 395028e09800e8543aadbb7c693cebc4, type: 3}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightLightLerpSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightLightAudioSource
-      value: 
-      objectReference: {fileID: 1905295523}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightLightToggleOnClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 1f9d88f2bcee3b54e8757cf52e6a427b, type: 3}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: flashlightLightToggleOffClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 395028e09800e8543aadbb7c693cebc4, type: 3}
-    - target: {fileID: 236577403986066357, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: intensityCurve.valueMultiplier
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2444797530556917146, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_Cookie
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2444797530556917146, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_SpotAngle
-      value: 59.99997
-      objectReference: {fileID: 0}
-    - target: {fileID: 2444797530556917146, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_InnerSpotAngle
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2444797530556917146, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_ColorTemperature
-      value: 4750
-      objectReference: {fileID: 0}
-    - target: {fileID: 2752457439593634148, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnFlashlightToggle
-      objectReference: {fileID: 0}
-    - target: {fileID: 2752457439593634148, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerFlashlight, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: InteractionDot
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: interactionDot
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: InteractionRange
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: interactionRange
-      value: 1.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: interactionTransform
-      value: 
-      objectReference: {fileID: 1237637937}
     - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
         type: 3}
       propertyPath: crosshairHandler.crosshairImage
       value: 
       objectReference: {fileID: 154608287}
-    - target: {fileID: 5805543425326242483, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      propertyPath: crosshairHandler.alphaChangeSpeed
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4082,16 +3806,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1237637937}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 158292405378810177, guid: ea083338810dfc145994ddab1231213b,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1905295523}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea083338810dfc145994ddab1231213b, type: 3}
 --- !u!65 &3414826057324666157
 BoxCollider:

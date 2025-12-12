@@ -11,7 +11,9 @@ public class InteractionController : UpdateMonoBehaviour
     public Vector3 InteractionTransformPos => interactionTransform.position;
 
 
+    [Header("Crosshair:")]
     [SerializeField] private CrosshairHandler crosshairHandler;
+    [Header("Inventory:")]
     [SerializeField] private PlayerInventory inventory;
 
 
