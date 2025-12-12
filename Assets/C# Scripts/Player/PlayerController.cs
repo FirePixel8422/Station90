@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : UpdateMonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private PlayerMoveHandler moveHandler;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckLength = 0.5f;
@@ -16,6 +16,23 @@ public class PlayerController : UpdateMonoBehaviour
     [Header("Camera Transform and Lerp Speed")]
     [SerializeField] Transform camTransform;
     [SerializeField] private float cameraAcceleration = 0.1f;
+
+
+    private bool isControlEnabled = true;
+    public bool IsControlEnabled
+    {
+        get => IsControlEnabled;
+        set
+        {
+            isControlEnabled = value;
+            if (isControlEnabled)
+            {
+                camRotX = camTransform.localEulerAngles.x;
+                camRotY = transform.localEulerAngles.y;
+            }
+        }
+    }
+
 
     private Rigidbody rb;
 
@@ -29,6 +46,10 @@ public class PlayerController : UpdateMonoBehaviour
     public void OnMove(InputAction.CallbackContext ctx)
     {
         moveDir = ctx.ReadValue<Vector2>();
+    }
+    public void OnSprint(InputAction.CallbackContext ctx)
+    {
+        moveHandler.SprintInput = ctx.ReadValueAsButton();
     }
     public void OnLook(InputAction.CallbackContext ctx)
     {
@@ -46,6 +67,8 @@ public class PlayerController : UpdateMonoBehaviour
 
     protected override void OnUpdate()
     {
+        if (IsControlEnabled == false) return;
+     
         Move();
         CameraMove();
     }
@@ -55,9 +78,12 @@ public class PlayerController : UpdateMonoBehaviour
     /// </summary>
     private void Move()
     {
+        // Update movement system
+        moveHandler.OnUpdate();
+
         Vector3 forwardDir = transform.TransformDirection(new Vector3(moveDir.x, 0f, moveDir.y));
 
-        Vector3 velocity = forwardDir * moveSpeed + new Vector3(0f, rb.linearVelocity.y, 0f);
+        Vector3 velocity = forwardDir * moveHandler.CurrentSpeed + new Vector3(0f, rb.linearVelocity.y, 0f);
 
         if (rb.linearVelocity.y > -0.1f && Physics.Raycast(groundCheck.position, Vector3.down, out RaycastHit hit, groundCheckLength))
         {

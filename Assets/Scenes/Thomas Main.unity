@@ -3804,6 +3804,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8732485958384730851, guid: ea083338810dfc145994ddab1231213b,
+        type: 3}
+      propertyPath: moveHandler.cStamina
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8732485958384730851, guid: ea083338810dfc145994ddab1231213b,
+        type: 3}
+      propertyPath: moveHandler.maxStamina
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8732485958384730851, guid: ea083338810dfc145994ddab1231213b,
+        type: 3}
+      propertyPath: moveHandler.staminaRegenDelay
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8732485958384730851, guid: ea083338810dfc145994ddab1231213b,
+        type: 3}
+      propertyPath: moveHandler.staminaRegenSpeed
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
