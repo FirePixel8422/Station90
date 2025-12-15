@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
-public class Monitor : UpdateMonoBehaviour
+public class MonitorDisplay : UpdateMonoBehaviour
 {
     [SerializeField] private Transform staticScreenCamHolder;
 
@@ -48,12 +48,7 @@ public class Monitor : UpdateMonoBehaviour
 
     private IEnumerator ChangeCamera()
     {
-        selectedCameraIndex += 1;
-
-        if (selectedCameraIndex == gameCameras.Length)
-        {
-            selectedCameraIndex = 0;
-        }
+        selectedCameraIndex.IncrememtSmart(gameCameras.Length);
 
         monitorCamera.transform.SetParent(staticScreenCamHolder, false, false);
 

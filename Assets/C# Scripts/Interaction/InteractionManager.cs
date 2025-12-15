@@ -13,12 +13,12 @@ public class InteractionManager : UpdateMonoBehaviour
     public static bool IsAnyItemSelected => SelectedItem != null;
 
 
-    private InteractionController player;
+    private PlayerInteractionController player;
 
 
     private void Start()
     {
-        player = InteractionController.Instance;
+        player = PlayerDataLibrary.InteractionController;
     }
 
     protected override void OnUpdate()

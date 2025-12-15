@@ -79,7 +79,7 @@ public class UIComponentGroup : MonoBehaviour
         }
         if (toggle != null)
         {
-            toggle.isOn = value == 0 ? false : true;
+            toggle.isOn = value != 0;
         }
         if (inputField != null)
         {

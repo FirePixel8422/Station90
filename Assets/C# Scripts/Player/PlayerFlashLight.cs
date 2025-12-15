@@ -36,6 +36,7 @@ public class PlayerFlashlight : UpdateMonoBehaviour
     private Camera cam;
 
     private bool isEnabled = true;
+    public bool IsForceDisabled;
     private float cIntensity;
 
 

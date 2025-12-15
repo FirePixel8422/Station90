@@ -1,0 +1,8 @@
+﻿
+
+
+
+public static class GlobalGameSettings
+{
+
+}

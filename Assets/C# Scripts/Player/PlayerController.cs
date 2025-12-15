@@ -21,7 +21,7 @@ public class PlayerController : UpdateMonoBehaviour
     private bool isControlEnabled = true;
     public bool IsControlEnabled
     {
-        get => IsControlEnabled;
+        get => isControlEnabled;
         set
         {
             isControlEnabled = value;
@@ -46,6 +46,7 @@ public class PlayerController : UpdateMonoBehaviour
     public void OnMove(InputAction.CallbackContext ctx)
     {
         moveDir = ctx.ReadValue<Vector2>();
+        moveHandler.MoveInput = moveDir.magnitude > 0;
     }
     public void OnSprint(InputAction.CallbackContext ctx)
     {
@@ -77,7 +78,7 @@ public class PlayerController : UpdateMonoBehaviour
     /// Move the player based on input
     /// </summary>
     private void Move()
-    {
+    {        
         // Update movement system
         moveHandler.OnUpdate();
 

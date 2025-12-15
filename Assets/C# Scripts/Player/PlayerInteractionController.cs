@@ -2,10 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class InteractionController : UpdateMonoBehaviour
-{
-    public static InteractionController Instance { get; private set; }
-    
+public class PlayerInteractionController : UpdateMonoBehaviour
+{   
 
     [SerializeField] private Transform interactionTransform;
     public Vector3 InteractionTransformPos => interactionTransform.position;
@@ -24,6 +22,7 @@ public class InteractionController : UpdateMonoBehaviour
 
 
     private Interactable heldInteractable;
+    private Interactable lastHeldInteractable;
 
 
     public void OnInteract(InputAction.CallbackContext ctx)
@@ -32,6 +31,7 @@ public class InteractionController : UpdateMonoBehaviour
         {
             if (InteractionManager.TryGetActiveItem(out heldInteractable) && heldInteractable.IsInteractable)
             {
+                lastHeldInteractable = heldInteractable;
                 heldInteractable.TryInteract();
             }
         }
@@ -47,7 +47,6 @@ public class InteractionController : UpdateMonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         crosshairHandler.Init();
     }
     protected override void OnUpdate()

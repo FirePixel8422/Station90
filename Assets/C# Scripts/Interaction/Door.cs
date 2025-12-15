@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Door : Interactable
 {
-    [SerializeField] protected string[] popupTexts;
-    private string PopupText => popupTexts[cRotindex];
-
-
     [SerializeField] private Quaternion[] rotationStates;
     [SerializeField] private float rotSpeed = 5;
 
@@ -40,7 +36,5 @@ public class Door : Interactable
             t  = (Time.time - startTime) * speed;
             transform.localRotation = Quaternion.Lerp(startRot, targetRot, t);
         }
-
-        popupTextObj.text = PopupText;
     }
 }

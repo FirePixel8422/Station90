@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 5805543425326242483}
   - component: {fileID: 236577403986066357}
   - component: {fileID: 5169100878198803861}
+  - component: {fileID: 5232745901910832280}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -39,7 +40,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4163189475814784731}
-  - {fileID: 8557577154857174128}
+  - {fileID: 482041148375567332}
   - {fileID: 3405677971289250250}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -243,6 +244,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 264544da-4365-4318-8c4f-97629e00d95e
     m_ActionName: 'Gameplay/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8732485958384730851}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnSprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f451e331-6dd1-4b25-b85b-8c286426e29f
+    m_ActionName: 'Gameplay/Sprint[/Keyboard/shift,/Mouse/backButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -260,7 +277,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa764eccafa023f47906053ddc8213ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 2
+  moveHandler:
+    moveSpeed: 2
+    sprintSpeed: 3.25
+    maxStaminaTime: 5
+    cStaminaTime: 5
+    staminaRegenDelay: 0.5
+    staminaRegenSpeed: 0.5
+    accelerationSpeed: 10
+    CurrentSpeed: 0
+    SprintInput: 0
+    MoveInput: 0
   groundCheck: {fileID: 4163189475814784731}
   groundCheckLength: 0.05
   mouseSensitivity: 0.5
@@ -444,6 +471,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5232745901910832280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158292405378810177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505f744d6a9f06441a80fa3a5c8be0d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  rotatePoint: {fileID: 0}
+  cameraHolder: {fileID: 0}
+  rotateSpeed: 0
+  rotAngle: 0
+  cameraLineLength: 0
+  camerLineStartOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &699965687182857737
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,7 +522,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4499522368319683770}
-  m_Father: {fileID: 7505993463414220789}
+  m_Father: {fileID: 482041148375567332}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &3058902518089114555
 Camera:
@@ -582,6 +627,38 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &2341807477235946432
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 482041148375567332}
+  m_Layer: 0
+  m_Name: CameraHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &482041148375567332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2341807477235946432}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8557577154857174128}
+  m_Father: {fileID: 7505993463414220789}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3580205319146138490
 GameObject:
   m_ObjectHideFlags: 0
