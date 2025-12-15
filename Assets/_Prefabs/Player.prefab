@@ -14,11 +14,13 @@ GameObject:
   - component: {fileID: 3448451906084628089}
   - component: {fileID: 9064007532296087818}
   - component: {fileID: 2752457439593634148}
+  - component: {fileID: 9038915788528613339}
   - component: {fileID: 8732485958384730851}
   - component: {fileID: 5805543425326242483}
   - component: {fileID: 236577403986066357}
+  - component: {fileID: 85178552551166663}
+  - component: {fileID: 5120812131321024663}
   - component: {fileID: 5169100878198803861}
-  - component: {fileID: 5232745901910832280}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -265,6 +267,18 @@ MonoBehaviour:
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &9038915788528613339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158292405378810177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5c10d6c3252c841ae6199a866afce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDataLibrary
 --- !u!114 &8732485958384730851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,7 +304,6 @@ MonoBehaviour:
     MoveInput: 0
   groundCheck: {fileID: 4163189475814784731}
   groundCheckLength: 0.05
-  mouseSensitivity: 0.5
   camTransform: {fileID: 8557577154857174128}
   cameraAcceleration: 10000
 --- !u!114 &5805543425326242483
@@ -364,8 +377,8 @@ MonoBehaviour:
   intensityOnVoid: 0.25
   checkRingRayCounts: 01000000050000000a000000
   maxFlashlightTiltAngle: 25
-  flashlightLightLerpSpeed: 15
-  flashlightLightToggleDelay: 0.2
+  flashlightLightLerpSpeed: 17.5
+  flashlightLightToggleDelay: 0.1
   flashlightLightAudioSource: {fileID: 5169100878198803861}
   randomPitchMinMax:
     min: 1.1
@@ -374,6 +387,34 @@ MonoBehaviour:
     type: 3}
   flashlightLightToggleOffClip: {fileID: 8300000, guid: 395028e09800e8543aadbb7c693cebc4,
     type: 3}
+  IsForceDisabled: 0
+--- !u!114 &85178552551166663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158292405378810177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97fd69704a7ea4547bac349cb91aa5a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamAnimator
+  cameraAnimator: {fileID: 482041148375567332}
+  cam: {fileID: 8557577154857174128}
+--- !u!114 &5120812131321024663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158292405378810177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80f7fc52608d9bf4ca8b3b1af8bd266e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSettingsHandler
+  UITransform: {fileID: 0}
 --- !u!82 &5169100878198803861
 AudioSource:
   m_ObjectHideFlags: 0
@@ -471,24 +512,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5232745901910832280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 158292405378810177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 505f744d6a9f06441a80fa3a5c8be0d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  rotatePoint: {fileID: 0}
-  cameraHolder: {fileID: 0}
-  rotateSpeed: 0
-  rotAngle: 0
-  cameraLineLength: 0
-  camerLineStartOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &699965687182857737
 GameObject:
   m_ObjectHideFlags: 0

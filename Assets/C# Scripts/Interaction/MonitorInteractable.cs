@@ -14,7 +14,7 @@ public class MonitorInteractable : StateInteractable
 
     public void OnLook(InputAction.CallbackContext ctx)
     {
-        mouseDelta = ctx.ReadValue<Vector2>() * PlayerSettingsHandler;
+        mouseDelta = ctx.ReadValue<Vector2>() * PlayerSettingsHandler.Settings.MouseSensitivity;
     }
 
     protected override void OnEnable()

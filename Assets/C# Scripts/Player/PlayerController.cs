@@ -10,9 +10,6 @@ public class PlayerController : UpdateMonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckLength = 0.5f;
 
-    [Header("Camera Settings")]
-    [SerializeField] private float mouseSensitivity = 100f;
-
     [Header("Camera Transform and Lerp Speed")]
     [SerializeField] Transform camTransform;
     [SerializeField] private float cameraAcceleration = 0.1f;
@@ -54,7 +51,7 @@ public class PlayerController : UpdateMonoBehaviour
     }
     public void OnLook(InputAction.CallbackContext ctx)
     {
-        mouseDelta = ctx.ReadValue<Vector2>() * mouseSensitivity;
+        mouseDelta = ctx.ReadValue<Vector2>() * PlayerSettingsHandler.Settings.MouseSensitivity;
     }
 
     private void Awake()

@@ -26,13 +26,13 @@ public class UIComponentGroup : MonoBehaviour
     private Toggle toggle;
     private TMP_InputField inputField;
 
-    [HideInInspector] public UnityAction<int> OnValueChanged;
+    [HideInInspector] public UnityAction<float> OnValueChanged;
 
 
     /// <summary>
     /// Initialize by getting the slider, toggle and input field components and setting their values to the startValue
     /// </summary>
-    public void Init(int startValue)
+    public void Init(float startValue)
     {
         slider = GetComponentInChildren<Slider>(true);
         toggle = GetComponentInChildren<Toggle>(true);
@@ -60,7 +60,7 @@ public class UIComponentGroup : MonoBehaviour
             {
                 if (value == "-") return;
 
-                OnValueChanged.Invoke((int)math.clamp(string.IsNullOrEmpty(value) ? 0 : long.Parse(value), minValue, maxValue));
+                OnValueChanged.Invoke((int)math.clamp(string.IsNullOrEmpty(value) ? 0 : int.Parse(value), minValue, maxValue));
             });
         }
 
@@ -69,7 +69,7 @@ public class UIComponentGroup : MonoBehaviour
 
 
 
-    private void UpdateUI(int value)
+    private void UpdateUI(float value)
     {
         value = math.clamp(value, minValue, maxValue);
 
