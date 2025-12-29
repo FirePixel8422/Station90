@@ -1,5 +1,4 @@
-
-
+using Unity.Mathematics;
 
 /// <summary>
 /// A lightweight struct that holds a float min and float max.
@@ -15,6 +14,11 @@ public struct MinMaxFloat
         this.min = min;
         this.max = max;
     }
+
+    /// <summary>
+    /// Returns a random float value between the min and max values.
+    /// </summary>
+    public float GetRandomValue() => EzRandom.Range(this);
 
 
     // Math oerators

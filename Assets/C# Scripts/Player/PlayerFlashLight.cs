@@ -36,21 +36,33 @@ public class PlayerFlashlight : UpdateMonoBehaviour
     private Camera cam;
 
     private bool isEnabled = true;
-    public bool IsForceDisabled;
+    private bool isForceDisabled;
+    public void SetForceDisabledState(bool state)
+    {
+        isForceDisabled = state;
+        if (state == true)
+        {
+            cIntensity = 0;
+        }
+    }
+    public bool IsEnabled => isEnabled && !isForceDisabled;
+
     private float cIntensity;
 
 
 
     public void OnFlashlightToggle(InputAction.CallbackContext ctx)
     {
+        if (isForceDisabled) return;
+
         if (ctx.performed)  
         {
-            Invoke(nameof(ToggleFlashlightAfterDelay), flashlightLightToggleDelay);
+            Invoke(nameof(ToggleFlashlight), flashlightLightToggleDelay);
 
-            flashlightLightAudioSource.PlayOneShotClipWithPitch(isEnabled ? flashlightLightToggleOnClip : flashlightLightToggleOffClip, EzRandom.Range(randomPitchMinMax));
+            flashlightLightAudioSource.PlayOneShotClipWithPitch(isEnabled ? flashlightLightToggleOnClip : flashlightLightToggleOffClip, randomPitchMinMax.GetRandomValue());
         }
     }
-    private void ToggleFlashlightAfterDelay()
+    private void ToggleFlashlight()
     {
         isEnabled = !isEnabled;
         if (isEnabled == false)
@@ -67,7 +79,7 @@ public class PlayerFlashlight : UpdateMonoBehaviour
 
     protected override void OnUpdate()
     {
-        if (isEnabled)
+        if (IsEnabled)
         {
             UpdateFlashlightIntensity();
         }
@@ -94,7 +106,7 @@ public class PlayerFlashlight : UpdateMonoBehaviour
         Vector3 origin = centerRay.origin;
         Vector3 forward = centerRay.direction;
 
-        float coneRad = flashlightLight.spotAngle * Mathf.Deg2Rad;
+        float coneRad = 60 * Mathf.Deg2Rad;
 
         float totalDistance = 0;
         int hitCount = 0;
