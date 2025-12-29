@@ -24,8 +24,14 @@ public class PlayerController : UpdateMonoBehaviour
             isControlEnabled = value;
             if (isControlEnabled)
             {
+                rb.isKinematic = false;
                 camRotX = camTransform.localEulerAngles.x;
                 camRotY = transform.localEulerAngles.y;
+            }
+            else
+            {
+                rb.isKinematic = true;
+                mouseDelta = Vector2.zero;
             }
         }
     }

@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class StateInteractable : Interactable
 {
-    protected bool interactableActiveState;
+    protected bool isInteractableActive;
 
     protected override void OnInteract()
     {
-        interactableActiveState = !interactableActiveState;
+        isInteractableActive = !isInteractableActive;
 
-        if (interactableActiveState)
+        if (isInteractableActive)
         {
             OnToggleActivate();
         }

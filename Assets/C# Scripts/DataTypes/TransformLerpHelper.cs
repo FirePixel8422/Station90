@@ -29,7 +29,7 @@ public struct TransformLerpHelper
     /// </summary>
     public void ApplyPositionAndRotation(float globalTime, ref Transform targetTransform, out bool lerpCompleted)
     {
-        float t = (globalTime - AnimStartTime) * AnimDuration;
+        float t = (globalTime - AnimStartTime) / AnimDuration;
 
         Vector3 pos = Vector3.Lerp(StartPoint, TargetPoint, t);
         Quaternion rot = Quaternion.Lerp(StartRot, TargetRot, t);

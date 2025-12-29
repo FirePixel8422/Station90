@@ -8,6 +8,8 @@ public class PlayerSettingsHandler : MonoBehaviour
 {
     public static PlayerSettings Settings { get; private set; }
 
+    [SerializeField] private InputActionAsset playerInput;
+    [SerializeField] private InputActionReference playerMenuInput;
 
     [Header("Where is UI Parent")]
     [SerializeField] private RectTransform UITransform;
@@ -18,32 +20,7 @@ public class PlayerSettingsHandler : MonoBehaviour
 
     private const string SettingsFilePath = "SaveData/PlayerSettings";
 
-
-
-    public async void OnOpenSettings(InputAction.CallbackContext ctx)
-    {
-        if (ctx.performed)
-        {
-            if (isSettingsMenuActive)
-            {
-                bool isInMainSettingsScreen = ReturnButton.PressActiveReturnButton();
-                if (isInMainSettingsScreen == false)
-                {
-                    UITransform.gameObject.SetActive(false);
-                    isSettingsMenuActive = false;
-                    PlayerDataLibrary.Controller.IsControlEnabled = true;
-
-                    await SaveSettingsAsync(Settings);
-                }
-            }
-            else
-            {
-                UITransform.gameObject.SetActive(true);
-                isSettingsMenuActive = true;
-                PlayerDataLibrary.Controller.IsControlEnabled = false;
-            }
-        }
-    }
+    private bool savedWasPlayerInControl;
 
 
     private async void Awake()
@@ -60,6 +37,41 @@ public class PlayerSettingsHandler : MonoBehaviour
             UIInputHandlers[i].Init(Settings.GetSavedData(dataIndex));
 
             UIInputHandlers[i].OnValueChanged += (value) => UpdateMatchSettingsSettings(dataIndex, value);
+        }
+
+        playerMenuInput.asset.Enable();
+        playerMenuInput.action.performed += OnOpenSettings;
+    }
+
+    public async void OnOpenSettings(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            if (isSettingsMenuActive)
+            {
+                bool isInMainSettingsScreen = ReturnButton.PressActiveReturnButton();
+                if (isInMainSettingsScreen == false)
+                {
+                    UITransform.gameObject.SetActive(false);
+                    isSettingsMenuActive = false;
+                    playerInput.Enable();
+
+                    PlayerDataLibrary.Controller.IsControlEnabled = savedWasPlayerInControl;
+                    PlayerDataLibrary.FlashLight.IsForceDisabled = !savedWasPlayerInControl;
+
+                    await SaveSettingsAsync(Settings);
+                }
+            }
+            else
+            {
+                UITransform.gameObject.SetActive(true);
+                isSettingsMenuActive = true;
+                playerInput.Disable();
+
+                savedWasPlayerInControl = PlayerDataLibrary.Controller.IsControlEnabled;
+                PlayerDataLibrary.Controller.IsControlEnabled = false;
+                PlayerDataLibrary.FlashLight.IsForceDisabled = true;
+            }
         }
     }
 
@@ -89,5 +101,12 @@ public class PlayerSettingsHandler : MonoBehaviour
     private async Task SaveSettingsAsync(PlayerSettings data)
     {
         await FileManager.SaveInfoAsync(data, SettingsFilePath);
+    }
+
+
+    private void OnDestroy()
+    {
+        playerMenuInput.asset.Disable();
+        playerMenuInput.action.performed -= OnOpenSettings;
     }
 }

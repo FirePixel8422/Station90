@@ -35,16 +35,20 @@ public class PlayerFlashlight : UpdateMonoBehaviour
     private Light flashlightLight;
     private Camera cam;
 
-    private bool isEnabled = true;
     private bool isForceDisabled;
-    public void SetForceDisabledState(bool state)
+    public bool IsForceDisabled
     {
-        isForceDisabled = state;
-        if (state == true)
+        get => isForceDisabled;
+        set
         {
-            cIntensity = 0;
+            isForceDisabled = value;
+            if (isForceDisabled)
+            {
+                cIntensity = 0;
+            }
         }
     }
+    private bool isEnabled = true;
     public bool IsEnabled => isEnabled && !isForceDisabled;
 
     private float cIntensity;

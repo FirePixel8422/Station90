@@ -6,16 +6,10 @@ public class PlayerCamAnimator : UpdateMonoBehaviour
     [SerializeField] private Transform cameraAnimator;
     [SerializeField] private Transform cam;
 
-    private PlayerController playerController;
-
     private bool IsAnimating;
     private TransformLerpHelper animData;
 
 
-    private void Awake()
-    {
-        playerController = GetComponent<PlayerController>();
-    }
 
     protected override void OnUpdate()
     {
@@ -28,7 +22,8 @@ public class PlayerCamAnimator : UpdateMonoBehaviour
     public void AnimateCameraToPoint(Vector3 targetPoint, Quaternion targetRot, float lerpTime)
     {
         IsAnimating = true;
-        playerController.IsControlEnabled = false;
+        PlayerDataLibrary.Controller.IsControlEnabled = false;
+        PlayerDataLibrary.FlashLight.IsForceDisabled = true;
 
         animData = new TransformLerpHelper(cam.position, targetPoint, cam.rotation, targetRot, Time.time, lerpTime);
     }
@@ -50,6 +45,7 @@ public class PlayerCamAnimator : UpdateMonoBehaviour
 
     public void UnlockPlayerControls()
     {
-        playerController.IsControlEnabled = true;
+        PlayerDataLibrary.Controller.IsControlEnabled = true;
+        PlayerDataLibrary.FlashLight.IsForceDisabled = false;
     }
 }

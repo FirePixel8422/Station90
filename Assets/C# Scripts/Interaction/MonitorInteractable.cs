@@ -1,48 +1,77 @@
-using FirePixel.Utility;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 public class MonitorInteractable : StateInteractable
 {
-    [SerializeField] private Transform viewMonitorTransform;
+    [SerializeField] private InputActionReference onMoveActionRef;
+    [SerializeField] private Transform[] viewMonitorTransforms;
 
     [SerializeField] private float enterMonitorLerpTime;
+    [SerializeField] private float swapMonitorLerpTime;
     [SerializeField] private float exitMonitorLerpTime;
 
-    private Vector2 mouseDelta;
+    private int activeMonitorId;
 
-    public void OnLook(InputAction.CallbackContext ctx)
-    {
-        mouseDelta = ctx.ReadValue<Vector2>() * PlayerSettingsHandler.Settings.MouseSensitivity;
-    }
 
-    protected override void OnEnable()
+    private void Awake()
     {
-        base.OnEnable();
-        UpdateScheduler.RegisterUpdate(OnUpdate);
+        onMoveActionRef.action.performed += OnMove;
+        onMoveActionRef.action.canceled += OnMove;
     }
-    protected override void OnDisable()
+    public void OnMove(InputAction.CallbackContext ctx)
     {
-        base.OnDisable();
-        UpdateScheduler.UnRegisterUpdate(OnUpdate);
-    }
+        Vector2 moveDelta = ctx.ReadValue<Vector2>();
 
+        if (isInteractableActive)
+        {
+            // If "s" is pressed, exit monitor
+            if (moveDelta.y < 0)
+            {
+                OnInteract();
+            }
+            else if (moveDelta.x != 0)
+            {
+                int prevMonitorId = activeMonitorId;
+                if (moveDelta.x > 0)
+                {
+                    activeMonitorId = Mathf.Min(activeMonitorId + 1, viewMonitorTransforms.Length - 1);
+                }
+                else
+                {
+                    activeMonitorId = Mathf.Max(activeMonitorId - 1, 0);
+                }
+
+                if(prevMonitorId == activeMonitorId) return;
+
+                PlayerDataLibrary.CamAnimator.AnimateCameraToPoint(viewMonitorTransforms[activeMonitorId].position, viewMonitorTransforms[activeMonitorId].rotation, swapMonitorLerpTime);
+            }
+        }
+    }
 
     protected override void OnToggleActivate()
     {
-        PlayerDataLibrary.CamAnimator.AnimateCameraToPoint(viewMonitorTransform.position, viewMonitorTransform.rotation, enterMonitorLerpTime);
+        activeMonitorId = Mathf.FloorToInt(viewMonitorTransforms.Length * 0.5f);
+        PlayerDataLibrary.CamAnimator.AnimateCameraToPoint(viewMonitorTransforms[activeMonitorId].position, viewMonitorTransforms[activeMonitorId].rotation, enterMonitorLerpTime);
     }
     protected override void OnToggleDeActivate()
     {
-        PlayerDataLibrary.CamAnimator.UnlockCameraToOrigin(viewMonitorTransform.rotation, exitMonitorLerpTime);
+        int centerMonitorId = Mathf.FloorToInt(viewMonitorTransforms.Length * 0.5f);
+        PlayerDataLibrary.CamAnimator.UnlockCameraToOrigin(viewMonitorTransforms[centerMonitorId].rotation, exitMonitorLerpTime);
     }
 
-    private void OnUpdate()
+    private void OnDestroy()
     {
-        if (interactableActiveState)
-        {
+        onMoveActionRef.action.performed -= OnMove;
+        onMoveActionRef.action.canceled -= OnMove;
+    }
 
+    private void OnDrawGizmos()
+    {
+        for (int i = 0; i < viewMonitorTransforms.Length; i++)
+        {
+            Gizmos.DrawWireSphere(viewMonitorTransforms[i].position, 0.1f);
+            Gizmos.DrawLine(viewMonitorTransforms[i].position, viewMonitorTransforms[i].position + viewMonitorTransforms[i].forward);
         }
     }
 }

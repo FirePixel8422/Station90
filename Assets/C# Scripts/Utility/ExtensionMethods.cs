@@ -335,12 +335,25 @@ public static class ExtensionMethods
     /// <summary>
     /// Increments index by 1 and wraps to 0 if it reaches length
     /// </summary>
-    public static void IncrememtSmart(this ref int value, int length)
+    public static int IncrememtSmart(this ref int value, int length)
     {
         value += 1;
         if (value >= length)
         {
             value = 0;
         }
+        return value;
+    }
+    /// <summary>
+    /// Decrements index by 1 and wraps to 0 if it reaches length
+    /// </summary>
+    public static int DecrememtSmart(this ref int value, int length)
+    {
+        value -= 1;
+        if (value < 0)
+        {
+            value = length - 1;
+        }
+        return value;
     }
 }
