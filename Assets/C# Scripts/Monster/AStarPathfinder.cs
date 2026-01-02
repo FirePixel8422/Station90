@@ -6,14 +6,26 @@ using UnityEngine;
 
 public static class AStarPathfinder
 {
+    private const int NORMAL_MOVE_COST = 10;
+    private const int DIAGONAL_MOVE_COST = 14;
+
     public static bool TryGetPathToTarget(Vector3 startPos, Vector3 targetPos, List<Vector3> path)
     {
         Node startNode = GridManager.Instance.NodeFromWorldPoint(startPos);
         Node targetNode = GridManager.Instance.NodeFromWorldPoint(targetPos);
 
-        Heap<Node> openNodes = new Heap<Node>(GridManager.Instance.MaxSize);
-        HashSet<Node> closedNodes = new HashSet<Node>();
+        NodeHeap openNodes = new NodeHeap(GridManager.Instance.GridLength);
+        HashSet<Node> closedNodes = new HashSet<Node>(GridManager.Instance.GridLength / 2);
+        Node[] neighbours = new Node[8];
 
+        Node cNeighbour;
+
+        int currentNodeGridId;
+        int cNeighbourDist;
+        int newMovementCostToNeigbour;
+
+        int2 gridPosA;
+        int2 gridPosB;
 
         openNodes.Add(startNode);
         while (openNodes.Count > 0)
@@ -28,29 +40,38 @@ public static class AStarPathfinder
                 return pathSucces;
             }
 
+            GridManager.Instance.GetNeigbours(currentNode, neighbours, out int neighbourCount);
 
-            foreach (Node neigbour in GridManager.Instance.GetNeigbours(currentNode))
+            for (int i = 0; i < neighbourCount; i++)
             {
-                if (!neigbour.walkable || closedNodes.Contains(neigbour))
+                cNeighbour = neighbours[i];
+
+                if (cNeighbour.IsWalkable == false || closedNodes.Contains(cNeighbour))
                 {
                     continue;
                 }
 
-                int2 currentNodeGridPos = currentNode.gridPos;
+                currentNodeGridId = currentNode.GridId;
 
-                int neigbourDist = GetDistance(currentNodeGridPos, neigbour.gridPos);
-                int newMovementCostToNeigbour = currentNode.gCost + neigbourDist;
+                gridPosA = GridManager.GridIdToGridPos(currentNodeGridId);
+                gridPosB = GridManager.GridIdToGridPos(cNeighbour.GridId);
 
-                if (newMovementCostToNeigbour < neigbour.gCost || !openNodes.Contains(neigbour))
+                cNeighbourDist = GetDistance(gridPosA, gridPosB);
+                newMovementCostToNeigbour = currentNode.GCost + cNeighbourDist;
+
+                if (newMovementCostToNeigbour < cNeighbour.GCost || openNodes.Contains(cNeighbour) == false)
                 {
-                    neigbour.gCost = newMovementCostToNeigbour;
+                    cNeighbour.GCost = newMovementCostToNeigbour;
 
-                    neigbour.hCost = GetDistance(neigbour.gridPos, targetNode.gridPos);
-                    neigbour.parentGridPos = currentNodeGridPos;
+                    gridPosA = GridManager.GridIdToGridPos(cNeighbour.GridId);
+                    gridPosB = GridManager.GridIdToGridPos(targetNode.GridId);
 
-                    if (!openNodes.Contains(neigbour))
+                    cNeighbour.HCost = GetDistance(gridPosA, gridPosB);
+                    cNeighbour.ParentGridId = currentNodeGridId;
+
+                    if (openNodes.Contains(cNeighbour) == false)
                     {
-                        openNodes.Add(neigbour);
+                        openNodes.Add(cNeighbour);
                     }
                 }
             }
@@ -65,7 +86,7 @@ public static class AStarPathfinder
 
         if (endNode == startNode)
         {
-            Debug.LogWarning("Target Already Reached");
+            DebugLogger.LogWarning("Target Already Reached");
             return false;
         }
 
@@ -73,29 +94,14 @@ public static class AStarPathfinder
 
         while (currentNode != startNode)
         {
-
-            if (currentNode != endNode)
-            {
-                path.Clear();
-                return false;
-            }
-
-
-            path.Add(currentNode.worldPos);
-
-            currentNode = GridManager.NodeFromGridId(currentNode.parentGridPos);
+            path.Add(currentNode.WorldPos);
+            currentNode = GridManager.NodeFromGridId(currentNode.ParentGridId);
         }
 
         // Reverse when done
         path.Reverse();
-
         return true;
     }
-
-
-    private const int NORMAL_MOVE_COST = 10;
-    private const int DIAGONAL_MOVE_COST = 14;
-
 
     private static int GetDistance(int2 gridPosA, int2 gridPosB)
     {

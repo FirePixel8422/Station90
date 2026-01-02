@@ -1,34 +1,29 @@
+using System;
 using UnityEngine;
-using Unity.Mathematics;
 
 
-public class Node : IHeapItem<Node>
+public class Node : IComparable<Node>
 {
-    public int layerId;
+    public int LayerId;
 
-    public bool walkable;
-    public Vector3 worldPos;
+    public bool IsWalkable;
+    public Vector3 WorldPos;
 
-    public int2 gridPos;
-    public int2 parentGridPos;
+    public int GridId;
+    public int ParentGridId;
 
-    public int gCost;
-    public int hCost;
-    public int FCost => gCost + hCost;
+    public int GCost;
+    public int HCost;
+    public int FCost => GCost + HCost;
 
-    private int heapIndex;
-    public int HeapIndex
+    public int HeapIndex;
+
+    public Node(bool walkable, Vector3 worldPos, int gridId, int layerId)
     {
-        get => heapIndex;
-        set => heapIndex = value;
-    }
-
-    public Node(bool _walkable, Vector3 _worldPos, int2 _gridPos, int _layerId)
-    {
-        walkable = _walkable;
-        worldPos = _worldPos;
-        gridPos = _gridPos;
-        layerId = _layerId;
+        IsWalkable = walkable;
+        WorldPos = worldPos;
+        GridId = gridId;
+        LayerId = layerId;
     }
 
     public int CompareTo(Node nodeToCompare)
@@ -36,8 +31,21 @@ public class Node : IHeapItem<Node>
         int compare = FCost.CompareTo(nodeToCompare.FCost);
         if (compare == 0)
         {
-            compare = hCost.CompareTo(nodeToCompare.hCost);
+            compare = HCost.CompareTo(nodeToCompare.HCost);
         }
         return -compare;
+    }
+        
+    public override bool Equals(object obj)
+    {
+        return obj is Node other && Equals(other);
+    }
+    public bool Equals(Node other)
+    {
+        return other != null && GridId == other.GridId;
+    }
+    public override int GetHashCode()
+    {
+        return GridId.GetHashCode();
     }
 }

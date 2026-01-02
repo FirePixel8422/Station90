@@ -7,7 +7,7 @@ public class GridManager : MonoBehaviour
     public static GridManager Instance { get; private set; }
 
 
-    public static Node[,] grid { get; private set; }
+    public static Node[] Grid { get; private set; }
 
     [SerializeField] private LayerMask obstructionLayer;
 
@@ -19,7 +19,7 @@ public class GridManager : MonoBehaviour
 
     [HideInInspector]
     public int gridSizeX, gridSizeZ;
-    public int MaxSize => gridSizeX * gridSizeZ;
+    public int GridLength => gridSizeX * gridSizeZ;
 
 
     private void Awake()
@@ -33,73 +33,77 @@ public class GridManager : MonoBehaviour
         gridSizeX = Mathf.RoundToInt(gridSize.x / nodeSize);
         gridSizeZ = Mathf.RoundToInt(gridSize.z / nodeSize);
 
-        grid = new Node[gridSizeX, gridSizeZ];
+        Grid = new Node[GridLength];
         Vector3 worldBottomLeft = gridPosition - Vector3.right * gridSize.x / 2 - Vector3.forward * gridSize.z / 2;
 
-        for (int x = 0; x < gridSizeX; x++)
+        for (int gridId = 0; gridId < GridLength; gridId++)
         {
-            for (int z = 0; z < gridSizeZ; z++)
-            {
-                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeSize + nodeSize / 2) + Vector3.forward * (z * nodeSize + nodeSize / 2);
+            int2 gridPos = new int2(
+                gridId % gridSizeX,
+                gridId / gridSizeX);
 
-                if (Physics.Raycast(worldPoint + Vector3.up * 10, Vector3.down, 100, obstructionLayer))
-                {
-                    grid[x, z] = new Node(false, worldPoint, new int2(x, z), -10);
-                }
-                else
-                {
-                    grid[x, z] = new Node(true, worldPoint, new int2(x, z), 0);
-                }
-            }
+            Vector3 worldPoint =
+                worldBottomLeft +
+                Vector3.right * (gridPos.x * nodeSize + nodeSize / 2) +
+                Vector3.forward * (gridPos.y * nodeSize + nodeSize / 2);
+
+            bool isWalkable = !Physics.Raycast(worldPoint + Vector3.up * 10, Vector3.down, 100, obstructionLayer);
+            Grid[gridId] = new Node(isWalkable, worldPoint, gridId, 0);
         }
     }
 
-    public List<Node> GetNeigbours(Node node)
+    public void GetNeigbours(Node node, Node[] neighbours, out int neighbourCount)
     {
-        List<Node> neigbours = new List<Node>();
+        neighbourCount = 0;
+        int2 gridPos = new int2(
+                node.GridId % gridSizeX,
+                node.GridId / gridSizeX);
+
         for (int x = -1; x <= 1; x++)
         {
             for (int z = -1; z <= 1; z++)
             {
                 // Skip corners and 0,0
-                if (math.abs(x) == math.abs(z))
-                {
-                    continue;
-                }
-                int checkX = node.gridPos.x + x;
-                int checkZ = node.gridPos.y + z;
+                if (math.abs(x) == math.abs(z)) continue;
+
+                int checkX = gridPos.x + x;
+                int checkZ = gridPos.y + z;
 
                 if (checkX >= 0 && checkX < gridSizeX && checkZ >= 0 && checkZ < gridSizeZ)
                 {
-                    neigbours.Add(grid[checkX, checkZ]);
+                    int checkGridId = checkX + checkZ * gridSizeX;
+                    neighbours[neighbourCount++] = Grid[checkGridId];
                 }
             }
         }
-        return neigbours;
     }
-
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
-        float percentX = (worldPosition.x + gridSize.x / 2) / gridSize.x;
-        float percentZ = (worldPosition.z + gridSize.z / 2) / gridSize.z;
+        Vector3 localPos = worldPosition - gridPosition;
+
+        float percentX = (localPos.x + gridSize.x * 0.5f) / gridSize.x;
+        float percentZ = (localPos.z + gridSize.z * 0.5f) / gridSize.z;
+
         percentX = Mathf.Clamp01(percentX);
         percentZ = Mathf.Clamp01(percentZ);
 
         int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
         int z = Mathf.RoundToInt((gridSizeZ - 1) * percentZ);
-        return grid[x, z];
-    }
 
-    public static Node NodeFromGridId(int2 gridId)
+        int gridId = x + z * gridSizeX;
+
+        return Grid[gridId];
+    }
+    public static Node NodeFromGridId(int gridId)
     {
-        return grid[gridId.x, gridId.y];
+        return Grid[gridId];
     }
-    public static Node NodeFromGridId(int x, int y)
+    public static int2 GridIdToGridPos(int gridId)
     {
-        return grid[x, y];
+        return new int2(
+            gridId % Instance.gridSizeX,
+            gridId / Instance.gridSizeX);
     }
-
-
 
 #if UNITY_EDITOR
 
@@ -109,22 +113,22 @@ public class GridManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying)
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(gridPosition, new Vector3(gridSize.x, 0.5f, gridSize.z));
+
+        if (Application.isPlaying == false || drawNodeColorGizmos == false) return;
         {
-            if (drawNodeColorGizmos == true)
+            for (int i2 = 0; i2 < gridSizeX; i2++)
             {
-                for (int i2 = 0; i2 < gridSizeX; i2++)
+                for (int i3 = 0; i3 < gridSizeZ; i3++)
                 {
-                    for (int i3 = 0; i3 < gridSizeZ; i3++)
-                    {
-                        Gizmos.DrawCube(grid[i2, i3].worldPos, Vector3.one * nodeSize * 0.9f);
-                    }
+                    int gridId = i2 + i3 * gridSizeX;
+
+                    Gizmos.color = nodeLayerColors[math.clamp(Grid[gridId].LayerId, 0, nodeLayerColors.Length - 1)];
+                    Gizmos.DrawCube(Grid[gridId].WorldPos, Vector3.one * nodeSize * 0.9f);
                 }
             }
         }
-
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(gridPosition, new Vector3(gridSize.x, 0.5f, gridSize.z));
     }
 
 #endif
