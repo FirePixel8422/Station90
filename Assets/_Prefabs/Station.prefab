@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 778983302933734263}
+  - component: {fileID: 6921708547145263181}
   m_Layer: 0
   m_Name: Station
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &778983302933734263
 Transform:
@@ -35,6 +36,28 @@ Transform:
   - {fileID: 1061748855669598973}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &6921708547145263181
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178543223975117556}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &1259519334555072221
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +217,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &796187473229087000
 Transform:
@@ -300,6 +323,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -354,6 +382,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -965,10 +998,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 9209487907871913130}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9efd8c94d39d694429701ef7fe991a0a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1648467353895018932}
   m_SourcePrefab: {fileID: 100100000, guid: 9efd8c94d39d694429701ef7fe991a0a, type: 3}
 --- !u!1 &1626709513593114426 stripped
 GameObject:
@@ -992,33 +1021,12 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1217911719625377915, guid: 9efd8c94d39d694429701ef7fe991a0a, type: 3}
---- !u!65 &1648467353895018932
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1626709513593114426}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 22.458942, y: 8.1706505, z: 14.97717}
-  m_Center: {x: 11.229471, y: 4.994561, z: 0}
 --- !u!4 &2150727222548698496 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9efd8c94d39d694429701ef7fe991a0a,
@@ -2587,6 +2595,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2642,6 +2655,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TunnelStraight (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2661,6 +2679,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2715,6 +2738,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2809,6 +2837,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2863,6 +2896,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3983,6 +4021,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4037,6 +4080,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4382,6 +4430,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4436,6 +4489,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4900,6 +4958,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796187473229087000}
     m_Modifications:
+    - target: {fileID: 3112800512553184186, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5790571003583280634, guid: ce2393590b0916e45981de0120d7a0d6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4954,6 +5017,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TunnelStraight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6992379836363582305, guid: ce2393590b0916e45981de0120d7a0d6,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
