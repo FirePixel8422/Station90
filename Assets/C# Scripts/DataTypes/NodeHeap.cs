@@ -13,6 +13,11 @@ public class NodeHeap
         items = new Node[maxHeapSize];
     }
 
+    public void Clear()
+    {
+        currentItemCount = 0;
+    }
+
     public void Add(Node item)
     {
         item.HeapIndex = currentItemCount;

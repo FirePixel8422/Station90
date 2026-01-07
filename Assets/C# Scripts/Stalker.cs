@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 
@@ -17,36 +18,24 @@ public class Stalker : UpdateMonoBehaviour
     [SerializeField] private bool drawPathGizmos = true;
     [SerializeField] private Color pathNodesColor = Color.black;
 
-    [SerializeField] private bool hasActivePath;
-
 
     public float elapsedTimeSinceLastUpdate;
 
     protected override void OnUpdate()
     {
         float deltaTime = Time.deltaTime;
-        bool pathUpdateQueued = false;
 
         elapsedTimeSinceLastUpdate += deltaTime;
 
         bool targetMovedEnough = Vector3.Distance(target.position, prevTargetPos) > minTargetMovementForUpdate;
 
-        if (targetMovedEnough || elapsedTimeSinceLastUpdate > updateDelay || elapsedTimeSinceLastUpdate > minForcedUpdateDelay)
+        if (targetMovedEnough || elapsedTimeSinceLastUpdate > minForcedUpdateDelay)
         {
             prevTargetPos = target.position;
             elapsedTimeSinceLastUpdate = 0;
-
-            pathUpdateQueued = true;
+            RecalculateNextPath();
         }
-
-        if (hasActivePath)
-        {
-            MoveStalker(deltaTime, pathUpdateQueued);
-        }
-        else if (pathUpdateQueued)
-        {
-            hasActivePath = RecalculateNextPath();
-        }
+        MoveStalker(deltaTime);
     }
 
     public bool RecalculateNextPath()
@@ -54,47 +43,30 @@ public class Stalker : UpdateMonoBehaviour
         // Position to move to
         Vector3 destinationPos = target.position;
 
-        return AStarPathfinder.TryGetPathToTarget(transform.position, destinationPos, path);
+        //Stopwatch sw = Stopwatch.StartNew();
+        bool succes = AStarPathfinder.TryGetPathToTarget(transform.position, destinationPos, path, new MinMaxFloat(1, 1));
+        //DebugLogger.Log(sw.ElapsedMilliseconds + "ms");
+        return succes;
     }
 
-    private void MoveStalker(float deltaTime, bool pathUpdateQueued)
+    private void MoveStalker(float deltaTime)
     {
         float initialMovement = cMoveSpeed * deltaTime;
         float movementLeft = initialMovement;
 
-        bool tileReached;
-
-
-        while (movementLeft > 0)
+        while (path.Count > 0 && movementLeft > 0)
         {
-            (tileReached, movementLeft) = MoveTowardsNode(movementLeft);
-
-            if (tileReached)
+            if (MoveTowardsNode(ref movementLeft))
             {
-                //call new path calculation if update is queued, end the movement loop
-                if (pathUpdateQueued)
-                {
-                    RecalculateNextPath();
-                    break;
-                }
-
-                //next path node
+                // Next path node
                 path.RemoveAt(0);
-
-                //if current path is completed, end the movement loop
-                if (path.Count == 0)
-                {
-                    hasActivePath = false;
-                    break;
-                }
             }
         }
     }
-    private (bool, float) MoveTowardsNode(float maxDistanceThisFrame)
+    private bool MoveTowardsNode(ref float maxDistanceThisFrame)
     {
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition = path[0];
-
 
         // Calculate the direction vector and its magnitude
         Vector3 vectorToTarget = targetPosition - currentPosition;
@@ -108,9 +80,9 @@ public class Stalker : UpdateMonoBehaviour
             transform.position = targetPosition;
 
             // Calculate the remainder of speed left
-            float remainder = maxDistanceThisFrame - distanceToTarget;
+            maxDistanceThisFrame -=- distanceToTarget;
 
-            return (true, remainder);
+            return true;
         }
         else
         {
@@ -118,7 +90,8 @@ public class Stalker : UpdateMonoBehaviour
             transform.position = currentPosition + vectorToTarget.normalized * maxDistanceThisFrame;
 
             // No remainder since we couldn't reach the next node
-            return (false, 0);
+            maxDistanceThisFrame = 0;
+            return false;
         }
     }
 

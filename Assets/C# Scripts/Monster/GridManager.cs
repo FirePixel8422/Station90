@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class GridManager : MonoBehaviour
 
     public static Node[] Grid { get; private set; }
 
-    [SerializeField] private LayerMask obstructionLayer;
+    [SerializeField] private LayerMask obstructionMask;
 
     [SerializeField] private Vector3 gridSize;
     [SerializeField] private Vector3 gridPosition;
@@ -20,6 +21,12 @@ public class GridManager : MonoBehaviour
     [HideInInspector]
     public int gridSizeX, gridSizeZ;
     public int GridLength => gridSizeX * gridSizeZ;
+
+#pragma warning disable UDR0001
+    public static NodeHeap OpenNodes;
+    public static HashSet<Node> ClosedNodes;
+    public static Node[] Neighbours;
+#pragma warning restore UDR0001
 
 
     private void Awake()
@@ -47,9 +54,28 @@ public class GridManager : MonoBehaviour
                 Vector3.right * (gridPos.x * nodeSize + nodeSize / 2) +
                 Vector3.forward * (gridPos.y * nodeSize + nodeSize / 2);
 
-            bool isWalkable = !Physics.Raycast(worldPoint + Vector3.up * 10, Vector3.down, 100, obstructionLayer);
-            Grid[gridId] = new Node(isWalkable, worldPoint, gridId, 0);
+            bool isWalkable = false;
+            int layer = 0;
+            if(Physics.Raycast(worldPoint + Vector3.up * 10, Vector3.down, out RaycastHit hit, 100))
+            {
+                int hitLayer = hit.transform.gameObject.layer;
+                bool inMask = (obstructionMask & (1 << hitLayer)) != 0;
+
+                layer = hitLayer;
+                isWalkable = !inMask;
+            }
+            Grid[gridId] = new Node(isWalkable, worldPoint, gridId, layer);
         }
+
+        OpenNodes = new NodeHeap(GridLength);
+        ClosedNodes = new HashSet<Node>(GridLength / 2);
+        Neighbours = new Node[8];
+    }
+
+    public static void PreparePathFindData()
+    {
+        OpenNodes.Clear();
+        ClosedNodes.Clear();
     }
 
     public void GetNeigbours(Node node, Node[] neighbours, out int neighbourCount)
@@ -63,8 +89,10 @@ public class GridManager : MonoBehaviour
         {
             for (int z = -1; z <= 1; z++)
             {
-                // Skip corners and 0,0
-                if (math.abs(x) == math.abs(z)) continue;
+                // Skip Center: 0,0
+                if (x == 0 && z == 0) continue;
+                // Skip Center and Diagonals
+                // if (math.abs(x) == math.abs(z)) continue;
 
                 int checkX = gridPos.x + x;
                 int checkZ = gridPos.y + z;
@@ -105,6 +133,7 @@ public class GridManager : MonoBehaviour
             gridId / Instance.gridSizeX);
     }
 
+
 #if UNITY_EDITOR
 
     [SerializeField] private bool drawNodeColorGizmos = false;
@@ -124,7 +153,7 @@ public class GridManager : MonoBehaviour
                 {
                     int gridId = i2 + i3 * gridSizeX;
 
-                    Gizmos.color = nodeLayerColors[math.clamp(Grid[gridId].LayerId, 0, nodeLayerColors.Length - 1)];
+                    Gizmos.color = nodeLayerColors[Grid[gridId].IsWalkable ? 0 : 1];
                     Gizmos.DrawCube(Grid[gridId].WorldPos, Vector3.one * nodeSize * 0.9f);
                 }
             }
