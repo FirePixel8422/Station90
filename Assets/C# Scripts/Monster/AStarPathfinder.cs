@@ -1,25 +1,28 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEngine;
 
 
-
-public static class AStarPathfinder
+public struct AStarPathfinder
 {
     private const int NORMAL_MOVE_COST = 10;
     private const int DIAGONAL_MOVE_COST = 14;
     private static readonly MinMaxFloat RANDOM_COST_MULTIPLIER = new MinMaxFloat(0.5f, 1.5f);
 
-    public static bool TryGetPathToTarget(Vector3 startPos, Vector3 targetPos, List<Vector3> path, MinMaxFloat fuzzynessMinMax)
-    {
-        Node startNode = GridManager.Instance.NodeFromWorldPoint(startPos);
-        Node targetNode = GridManager.Instance.NodeFromWorldPoint(targetPos);
+    public GridFloor GridFloor;
+    public float3 CurrentPos;
+    public float3 TargetPos;
+    public MinMaxFloat FuzzynessMinMax;
+    public List<float3> Path;
 
-        GridManager.PreparePathFindData();
-        NodeHeap openNodes = GridManager.OpenNodes;
-        HashSet<Node> closedNodes = GridManager.ClosedNodes;
-        Node[] neighbours = GridManager.Neighbours;
+    public bool Schedule()
+    {
+        Node startNode = GridFloor.NodeFromWorldPoint(CurrentPos);
+        Node targetNode = GridFloor.NodeFromWorldPoint(TargetPos);
+
+        GridFloor.PreparePathFindData();
+        NodeHeap openNodes = GridFloor.OpenNodes;
+        HashSet<Node> closedNodes = GridFloor.ClosedNodes;
+        Node[] neighbours = GridFloor.Neighbours;
 
         Node cNeighbour;
 
@@ -38,10 +41,10 @@ public static class AStarPathfinder
 
             if (currentNode == targetNode)
             {
-                return TryRetracePath(startNode, targetNode, path);
+                return TryRetracePath(startNode, targetNode, Path);
             }
 
-            GridManager.Instance.GetNeigbours(currentNode, neighbours, out int neighbourCount);
+            GridFloor.GetNeigbours(currentNode, neighbours, out int neighbourCount);
 
             for (int i = 0; i < neighbourCount; i++)
             {
@@ -54,19 +57,19 @@ public static class AStarPathfinder
 
                 currentNodeGridId = currentNode.GridId;
 
-                cGridPos = GridManager.GridIdToGridPos(cNeighbour.GridId);
-                targetGridPos = GridManager.GridIdToGridPos(currentNodeGridId);
+                cGridPos = GridFloor.GridIdToGridPos(cNeighbour.GridId);
+                targetGridPos = GridFloor.GridIdToGridPos(currentNodeGridId);
 
-                cNeighbourDist = GetDistance(cGridPos, targetGridPos, fuzzynessMinMax);
+                cNeighbourDist = GetDistance(cGridPos, targetGridPos, FuzzynessMinMax);
                 newMovementCostToNeigbour = currentNode.GCost + cNeighbourDist;
 
                 if (newMovementCostToNeigbour < cNeighbour.GCost || openNodes.Contains(cNeighbour) == false)
                 {
                     cNeighbour.GCost = newMovementCostToNeigbour;
 
-                    targetGridPos = GridManager.GridIdToGridPos(targetNode.GridId);
+                    targetGridPos = GridFloor.GridIdToGridPos(targetNode.GridId);
 
-                    cNeighbour.HCost = GetDistance(cGridPos, targetGridPos, fuzzynessMinMax);
+                    cNeighbour.HCost = GetDistance(cGridPos, targetGridPos, FuzzynessMinMax);
                     cNeighbour.ParentGridId = currentNodeGridId;
 
                     if (openNodes.Contains(cNeighbour) == false)
@@ -80,7 +83,7 @@ public static class AStarPathfinder
         return false;
     }
 
-    private static bool TryRetracePath(Node startNode, Node endNode, List<Vector3> path)
+    private bool TryRetracePath(Node startNode, Node endNode, List<float3> path)
     {
         if (endNode == startNode)
         {
@@ -94,7 +97,7 @@ public static class AStarPathfinder
         while (currentNode != startNode)
         {
             path.Add(currentNode.WorldPos);
-            currentNode = GridManager.NodeFromGridId(currentNode.ParentGridId);
+            currentNode = GridFloor.NodeFromGridId(currentNode.ParentGridId);
         }
 
         // Reverse when done
@@ -102,7 +105,7 @@ public static class AStarPathfinder
         return true;
     }
 
-    private static int GetDistance(int2 gridPosA, int2 gridPosB, MinMaxFloat fuzzynessMinMax)
+    private int GetDistance(int2 gridPosA, int2 gridPosB, MinMaxFloat fuzzynessMinMax)
     {
         int distX = math.abs(gridPosA.x - gridPosB.x);
         int distZ = math.abs(gridPosA.y - gridPosB.y);

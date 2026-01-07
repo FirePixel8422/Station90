@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -13,7 +13,7 @@ public class Stalker : UpdateMonoBehaviour
     [SerializeField] private float minTargetMovementForUpdate;
     [SerializeField] private float cMoveSpeed;
 
-    [SerializeField] private List<Vector3> path;
+    [SerializeField] private List<float3> path;
 
     [SerializeField] private bool drawPathGizmos = true;
     [SerializeField] private Color pathNodesColor = Color.black;
@@ -43,8 +43,17 @@ public class Stalker : UpdateMonoBehaviour
         // Position to move to
         Vector3 destinationPos = target.position;
 
-        //Stopwatch sw = Stopwatch.StartNew();
-        bool succes = AStarPathfinder.TryGetPathToTarget(transform.position, destinationPos, path, new MinMaxFloat(1, 1));
+        AStarPathfinder pathfinder = new AStarPathfinder()
+        {
+            CurrentPos = transform.position,
+            TargetPos = destinationPos,
+            FuzzynessMinMax = new MinMaxFloat(1, 1),
+            GridFloor = GridManager.Instance.gridFloors[0], // FLOORID_______________________________
+            Path = path
+        };
+
+        // System.Diagnostics.Stopwatch sw =  System.Diagnostics.Stopwatch.StartNew();
+        bool succes = pathfinder.Schedule();
         //DebugLogger.Log(sw.ElapsedMilliseconds + "ms");
         return succes;
     }
@@ -80,7 +89,7 @@ public class Stalker : UpdateMonoBehaviour
             transform.position = targetPosition;
 
             // Calculate the remainder of speed left
-            maxDistanceThisFrame -=- distanceToTarget;
+            maxDistanceThisFrame -= distanceToTarget;
 
             return true;
         }
@@ -102,7 +111,11 @@ public class Stalker : UpdateMonoBehaviour
             Gizmos.color = pathNodesColor;
             for (int i2 = 0; i2 < path.Count; i2++)
             {
-                Gizmos.DrawCube(path[i2], 0.9f * GridManager.Instance.nodeSize * Vector3.one);
+                Gizmos.DrawCube(path[i2], 0.9f * GridManager.Instance.gridFloors[0].NodeSize * Vector3.one); // FLOORID_______________________________
+                                                                                                             // FLOORID_______________________________
+                                                                                                             // FLOORID_______________________________
+                                                                                                             // FLOORID_______________________________
+                                                                                                             // FLOORID_______________________________
             }
         }
     }

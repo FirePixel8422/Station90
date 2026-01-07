@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 0
@@ -134,6 +134,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Station
       objectReference: {fileID: 0}
+    - target: {fileID: 511299563776431827, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -22.364746
+      objectReference: {fileID: 0}
+    - target: {fileID: 511299563776431827, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.23126602
+      objectReference: {fileID: 0}
+    - target: {fileID: 511299563776431827, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 778983302933734263, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -184,10 +199,70 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 787954253864359646, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18.364746
+      objectReference: {fileID: 0}
+    - target: {fileID: 787954253864359646, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.23126602
+      objectReference: {fileID: 0}
+    - target: {fileID: 787954253864359646, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450638646078343671, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -24.364746
+      objectReference: {fileID: 0}
+    - target: {fileID: 1450638646078343671, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1648467353895018932, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467598709915813308, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20.364746
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467598709915813308, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.23126602
+      objectReference: {fileID: 0}
+    - target: {fileID: 3467598709915813308, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6921708547145263181, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9070011910548186363, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -25.364738
+      objectReference: {fileID: 0}
+    - target: {fileID: 9070011910548186363, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.23126602
+      objectReference: {fileID: 0}
+    - target: {fileID: 9070011910548186363, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9209487907871913130, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
@@ -2715,7 +2790,7 @@ MonoBehaviour:
   updateDelay: 0.2
   minForcedUpdateDelay: 2
   minTargetMovementForUpdate: 0.05
-  cMoveSpeed: 5
+  cMoveSpeed: 2
   path: []
   drawPathGizmos: 1
   pathNodesColor: {r: 0, g: 0, b: 0, a: 1}
@@ -3797,11 +3872,29 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 0
-  gridSize: {x: 20, y: 0, z: 20}
-  gridPosition: {x: 0, y: 0, z: 0}
-  nodeSize: 0.5
-  gridSizeX: 0
-  gridSizeZ: 0
+  gridFloors:
+  - GridSize:
+      x: 30
+      y: 0
+      z: 11.5
+    GridPosition:
+      x: -5
+      y: 0
+      z: 0
+    NodeSize: 1
+    GridSizeX: 0
+    GridSizeZ: 0
+  - GridSize:
+      x: 30
+      y: 0
+      z: 11.5
+    GridPosition:
+      x: -5
+      y: 5
+      z: 0
+    NodeSize: 1
+    GridSizeX: 0
+    GridSizeZ: 0
   drawNodeColorGizmos: 0
   nodeLayerColors:
   - {r: 0.31779993, g: 0.38204494, b: 0.4264151, a: 1}
@@ -4930,7 +5023,7 @@ PrefabInstance:
     - target: {fileID: 2444797530556917146, guid: ea083338810dfc145994ddab1231213b,
         type: 3}
       propertyPath: m_ColorTemperature
-      value: 4750
+      value: 5500
       objectReference: {fileID: 0}
     - target: {fileID: 2752457439593634148, guid: ea083338810dfc145994ddab1231213b,
         type: 3}

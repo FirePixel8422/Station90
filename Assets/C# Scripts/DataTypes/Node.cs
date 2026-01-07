@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using Unity.Mathematics;
 
 
 public class Node : IComparable<Node>
@@ -7,7 +7,7 @@ public class Node : IComparable<Node>
     public int LayerId;
 
     public bool IsWalkable;
-    public Vector3 WorldPos;
+    public float3 WorldPos;
 
     public int GridId;
     public int ParentGridId;
@@ -18,7 +18,7 @@ public class Node : IComparable<Node>
 
     public int HeapIndex;
 
-    public Node(bool walkable, Vector3 worldPos, int gridId, int layerId)
+    public Node(bool walkable, float3 worldPos, int gridId, int layerId)
     {
         IsWalkable = walkable;
         WorldPos = worldPos;
