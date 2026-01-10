@@ -5,33 +5,39 @@ using UnityEngine;
 
 public class Stalker : UpdateMonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] private IPathfindTarget target;
     [SerializeField] private Vector3 prevTargetPos;
 
     [SerializeField] private float updateDelay;
     [SerializeField] private float minForcedUpdateDelay;
     [SerializeField] private float minTargetMovementForUpdate;
     [SerializeField] private float cMoveSpeed;
+    [SerializeField] private float maxStairYStep;
 
     [SerializeField] private List<float3> path;
 
     [SerializeField] private bool drawPathGizmos = true;
     [SerializeField] private Color pathNodesColor = Color.black;
+    public int GridFloorId => transform.position.y > 2 ? 1 : 0;
+
+    private float elapsedTimeSinceLastUpdate;
 
 
-    public float elapsedTimeSinceLastUpdate;
-
+    private void Start()
+    {
+        target = PlayerDataLibrary.PathfindTarget;
+    }
     protected override void OnUpdate()
     {
         float deltaTime = Time.deltaTime;
 
         elapsedTimeSinceLastUpdate += deltaTime;
 
-        bool targetMovedEnough = Vector3.Distance(target.position, prevTargetPos) > minTargetMovementForUpdate;
+        bool targetMovedEnough = Vector3.Distance(target.Position, prevTargetPos) > minTargetMovementForUpdate;
 
         if (targetMovedEnough || elapsedTimeSinceLastUpdate > minForcedUpdateDelay)
         {
-            prevTargetPos = target.position;
+            prevTargetPos = target.Position;
             elapsedTimeSinceLastUpdate = 0;
             RecalculateNextPath();
         }
@@ -41,14 +47,15 @@ public class Stalker : UpdateMonoBehaviour
     public bool RecalculateNextPath()
     {
         // Position to move to
-        Vector3 destinationPos = target.position;
+        Vector3 destinationPos = target.Position;
 
         AStarPathfinder pathfinder = new AStarPathfinder()
         {
             CurrentPos = transform.position,
             TargetPos = destinationPos,
             FuzzynessMinMax = new MinMaxFloat(1, 1),
-            GridFloor = GridManager.Instance.gridFloors[0], // FLOORID_______________________________
+            MaxYStep = 1,
+            GridFloor = GridManager.Instance.gridFloors[target.GridFloorId],
             Path = path
         };
 
@@ -111,11 +118,7 @@ public class Stalker : UpdateMonoBehaviour
             Gizmos.color = pathNodesColor;
             for (int i2 = 0; i2 < path.Count; i2++)
             {
-                Gizmos.DrawCube(path[i2], 0.9f * GridManager.Instance.gridFloors[0].NodeSize * Vector3.one); // FLOORID_______________________________
-                                                                                                             // FLOORID_______________________________
-                                                                                                             // FLOORID_______________________________
-                                                                                                             // FLOORID_______________________________
-                                                                                                             // FLOORID_______________________________
+                Gizmos.DrawCube(path[i2], 0.9f * GridManager.Instance.gridFloors[target.GridFloorId].NodeSize * Vector3.one);
             }
         }
     }

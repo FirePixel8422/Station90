@@ -8,6 +8,7 @@ public class Node : IComparable<Node>
 
     public bool IsWalkable;
     public float3 WorldPos;
+    public float OverrideMaxStep;
 
     public int GridId;
     public int ParentGridId;
@@ -18,12 +19,13 @@ public class Node : IComparable<Node>
 
     public int HeapIndex;
 
-    public Node(bool walkable, float3 worldPos, int gridId, int layerId)
+    public Node(bool walkable, float3 worldPos, int gridId, int layerId, float overrideMaxStep)
     {
         IsWalkable = walkable;
         WorldPos = worldPos;
         GridId = gridId;
         LayerId = layerId;
+        OverrideMaxStep = overrideMaxStep;
     }
 
     public int CompareTo(Node nodeToCompare)

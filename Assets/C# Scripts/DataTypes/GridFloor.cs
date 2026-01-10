@@ -7,22 +7,78 @@ using UnityEngine;
 [System.Serializable]
 public class GridFloor
 {
-    public float3 GridSize;
-    public float3 GridPosition;
-
+    public float3 gridSize;
+    public float3 gridPosition;
     [Range(0.1f, 5)]
-    public float NodeSize;
+    public float nodeSize;
 
-    public Node[] Grid;
+    public float3 GridSize => gridSize;
+    public float3 GridPosition => gridPosition;
+    public float NodeSize => nodeSize;
 
-    [HideInInspector]
-    public int GridSizeX, GridSizeZ;
+    public Node[] Grid { get; private set; }
+    
+    public int GridSizeX { get; private set; }
+    public int GridSizeZ { get; private set; }
     public int GridLength => GridSizeX * GridSizeZ;
+
 
     public NodeHeap OpenNodes;
     public HashSet<Node> ClosedNodes;
-    public Node[] Neighbours => GridManager.Neighbours;
+    public Node[] Neighbours { get; private set; }
 
+
+    public void Create(LayerMask walkableMask, Node[] neighbours)
+    {
+        float3 gridSize = GridSize;
+        float3 gridPosition = GridPosition;
+        float nodeSize = NodeSize;
+
+        GridSizeX = Mathf.RoundToInt(GridSize.x / nodeSize);
+        GridSizeZ = Mathf.RoundToInt(GridSize.z / nodeSize);
+
+        Grid = new Node[GridLength];
+        float3 worldBottomLeft =
+            gridPosition -
+            new float3(gridSize.x * 0.5f, 0, 0) -
+            new float3(0, 0, gridSize.z * 0.5f);
+
+        for (int gridId = 0; gridId < GridLength; gridId++)
+        {
+            int2 gridPos = new int2(
+                gridId % GridSizeX,
+                gridId / GridSizeX);
+
+            Vector3 worldPoint =
+                worldBottomLeft +
+                new float3(1, 0, 0) * (gridPos.x * nodeSize + nodeSize * 0.5f) +
+                new float3(0, 0, 1) * (gridPos.y * nodeSize + nodeSize * 0.5f);
+
+            bool isWalkable = false;
+            int layer = 0;
+            float overrideMaxStep = -1;
+
+            if (Physics.Raycast(worldPoint + Vector3.up * 0.5f, Vector3.down, out RaycastHit hit, 15f))
+            {
+                int hitLayer = hit.transform.gameObject.layer;
+                bool inMask = (walkableMask & (1 << hitLayer)) != 0;
+
+                isWalkable = inMask && hit.distance < 1;
+                layer = hitLayer;
+
+                if (hit.transform.TryGetComponent(out AStarTerrainStair terrainObject))
+                {
+                    overrideMaxStep = terrainObject.OverrideMaxStep;
+                    isWalkable = true;
+                }
+            }
+            Grid[gridId] = new Node(isWalkable, hit.point, gridId, layer, overrideMaxStep);
+        }
+
+        OpenNodes = new NodeHeap(GridLength);
+        ClosedNodes = new HashSet<Node>(GridLength / 2);
+        Neighbours = neighbours;
+    }
 
     public void PreparePathFindData()
     {

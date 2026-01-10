@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using Unity.Mathematics;
 
 
@@ -11,6 +12,7 @@ public struct AStarPathfinder
     public GridFloor GridFloor;
     public float3 CurrentPos;
     public float3 TargetPos;
+    public float MaxYStep;
     public MinMaxFloat FuzzynessMinMax;
     public List<float3> Path;
 
@@ -50,9 +52,21 @@ public struct AStarPathfinder
             {
                 cNeighbour = neighbours[i];
 
+                // Break conditions, non walkable, already closed, or too high height step
                 if (cNeighbour.IsWalkable == false || closedNodes.Contains(cNeighbour))
                 {
                     continue;
+                }
+                else
+                {
+                    float maxYStep = cNeighbour.OverrideMaxStep == -1 ?
+                        MaxYStep :
+                        cNeighbour.OverrideMaxStep;
+
+                    if (math.distance(currentNode.WorldPos.y, cNeighbour.WorldPos.y) > maxYStep)
+                    {
+                        continue;
+                    }
                 }
 
                 currentNodeGridId = currentNode.GridId;

@@ -36,14 +36,12 @@ public class PlayerController : UpdateMonoBehaviour
         }
     }
 
-
     private Rigidbody rb;
 
     private Vector2 moveDir;
     private Vector2 mouseDelta;
     private float camRotX;
     private float camRotY;
-
 
 
     public void OnMove(InputAction.CallbackContext ctx)

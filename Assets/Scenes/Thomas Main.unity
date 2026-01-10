@@ -134,6 +134,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Station
       objectReference: {fileID: 0}
+    - target: {fileID: 178543223975117556, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 511299563776431827, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -157,7 +162,7 @@ PrefabInstance:
     - target: {fileID: 778983302933734263, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.04
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 778983302933734263, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
@@ -244,10 +249,25 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6215620659776484760, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6748105808972497002, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6921708547145263181, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
       propertyPath: m_Convex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8872620884245179233, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9070011910548186363, guid: 40c81a5275a72ce47b9b48532f344a07,
         type: 3}
@@ -269,7 +289,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8872620884245179233, guid: 40c81a5275a72ce47b9b48532f344a07, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -277,6 +298,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 788705914}
+    - targetCorrespondingSourceObject: {fileID: 6263881280916429520, guid: 40c81a5275a72ce47b9b48532f344a07,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 178485946}
   m_SourcePrefab: {fileID: 100100000, guid: 40c81a5275a72ce47b9b48532f344a07, type: 3}
 --- !u!1 &80544776
 GameObject:
@@ -601,6 +626,25 @@ MonoBehaviour:
   anisotropy: 0.24
   scattering: 8.96
   radius: 0.8
+--- !u!1 &178485942 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6263881280916429520, guid: 40c81a5275a72ce47b9b48532f344a07,
+    type: 3}
+  m_PrefabInstance: {fileID: 2838427}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &178485946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178485942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b783ac8e76f360a47ac8c5c31d11efa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AStarTerrainObject
+  OverrideMaxStep: 0.5
 --- !u!1 &189254513
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,7 +977,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 2b5167680c30cf646a9c0bcab9ca821b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.01
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2b5167680c30cf646a9c0bcab9ca821b,
         type: 3}
@@ -2785,16 +2829,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7361d7bfaf193be4da2139969087258e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Stalker
-  target: {fileID: 1951167894}
   prevTargetPos: {x: 0, y: 0, z: 0}
   updateDelay: 0.2
   minForcedUpdateDelay: 2
   minTargetMovementForUpdate: 0.05
   cMoveSpeed: 2
+  maxStairYStep: 0.01
   path: []
   drawPathGizmos: 1
   pathNodesColor: {r: 0, g: 0, b: 0, a: 1}
-  elapsedTimeSinceLastUpdate: 0
 --- !u!1 &1470758748
 GameObject:
   m_ObjectHideFlags: 0
@@ -3869,36 +3912,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69d67c5efd53c444a3669ffc8ea6cf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  obstructionMask:
+  walkableMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   gridFloors:
-  - GridSize:
-      x: 30
+  - gridSize:
+      x: 33
       y: 0
-      z: 11.5
-    GridPosition:
-      x: -5
-      y: 0
+      z: 11.6
+    gridPosition:
+      x: -3.5
+      y: 1.15
       z: 0
-    NodeSize: 1
-    GridSizeX: 0
-    GridSizeZ: 0
-  - GridSize:
-      x: 30
+    nodeSize: 0.5
+  - gridSize:
+      x: 84
       y: 0
-      z: 11.5
-    GridPosition:
-      x: -5
-      y: 5
-      z: 0
-    NodeSize: 1
-    GridSizeX: 0
-    GridSizeZ: 0
-  drawNodeColorGizmos: 0
-  nodeLayerColors:
-  - {r: 0.31779993, g: 0.38204494, b: 0.4264151, a: 1}
-  - {r: 0.2830189, g: 0.022961887, b: 0.022961887, a: 1}
+      z: 18.5
+    gridPosition:
+      x: 46.5
+      y: 5.65
+      z: 1
+    nodeSize: 0.25
+  drawNodeColorGizmos: 1
+  nodeColor: {r: 0.31764707, g: 0.50980395, b: 0.6901961, a: 0.2509804}
+  nodeStairColor: {r: 0.6901961, g: 0.32143095, b: 0.31764704, a: 0.2509804}
 --- !u!4 &1821476331
 Transform:
   m_ObjectHideFlags: 0
@@ -4172,12 +4210,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1951167894 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2232365686626202056}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1962383523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5125,7 +5157,7 @@ PrefabInstance:
     - target: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.95
       objectReference: {fileID: 0}
     - target: {fileID: 7505993463414220789, guid: ea083338810dfc145994ddab1231213b,
         type: 3}
